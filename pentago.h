@@ -1,27 +1,27 @@
 #ifndef PENTAGO_H
 #define PENTAGO_H
 
-#include "gestionnairejoueur.h"
-#include "plateau.h"
+#include "gamemanager.h"
+#include "board.h"
 #include <vector>
 
 class Pentago
 {
 
 public:
-    GestionnaireJoueur lesJoueurs;
-    Plateau plateauJeu;
-    bool finPartie;
+    GameManager gameManager;
+    Board board;
+    bool finished;
 
 public:
-    Pentago(std::vector<Joueur> & tabJoueurs);
-    void jouer(int x, int y);
-    void tourner(int miniPlateau, Direction direction);
-    bool estTerminer() const;
+    Pentago(std::vector<Player> & players);
+    void play(int x, int y);
+    void rotate(int miniBoard, Direction direction);
+    bool isFinished() const;
     bool resultatEgalite() const;
-    std::string getNomGagnant();
-    std::string getNomJoueurCourant();
-    std::vector<std::vector<Trou>> getPlateau() const;
+    std::string getWinnerName();
+    std::string getCurrentPlayerName();
+    std::vector<std::vector<Hole>> getBoard() const;
 
 };
 

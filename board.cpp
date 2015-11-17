@@ -1,65 +1,65 @@
-#include "plateau.h"
+#include "board.h"
 #include "pentagoexception.h"
 
 using namespace std;
 
-Plateau::Plateau():plateau(6, vector<Trou>(6,Trou())), nombreCoup(0)
+Board::Board():board(6, vector<Hole>(6,Hole())), nombreCoup(0)
 {
 }
 
 
-void Plateau::placerBille(int x, int y, Joueur * joueur)
+void Board::placeBall(int x, int y, Player * player)
 {
-    if(x < 0 || x > plateau.size() || y < 0 || y > plateau.at(0).size()){
+    if(x < 0 || x > board.size() || y < 0 || y > board.at(0).size()){
         throw PentagoException("la position choisie est invalide !");
     }
-    if(plateau[x][y].estOccupe()){
+    if(board[x][y].isOccupied()){
         throw PentagoException("la position choisie est occupée !");
     }
-    plateau[x][y].setBilleTrou(Bille(joueur->getCouleurBille()));
-    plateau[x][y].setJoueurTrou(joueur);
+    board[x][y].setBall(Ball(player->getBallColor()));
+    board[x][y].setPlayer(player);
     nombreCoup++;
 }
 
-void Plateau::tournerMiniPlateau(int numMiniPlateau, Direction direction)
+void Board::rotateMiniBoard(int numMiniPlateau, Direction direction)
 {
     int posMiniPlaX = numMiniPlateau==1 || numMiniPlateau==2 ? 0 : 3;
     int posMiniPlaY = numMiniPlateau==1 || numMiniPlateau==3 ? 0 : 3;
-    if(direction==VERS_LE_BAS){
-        rotationAntiHorlogique(posMiniPlaX,posMiniPlaY);
+    if(direction==COUNTERCLOCKWISE){
+        rotateCounterclockwise(posMiniPlaX,posMiniPlaY);
     }else{
-        rotationHorlogique(posMiniPlaX,posMiniPlaY);
+        rotateClockwise(posMiniPlaX,posMiniPlaY);
     }
 }
 
-vector<vector<Trou> > Plateau::getPlateau() const
+vector<vector<Hole> > Board::getBoard() const
 {
-    return plateau;
+    return board;
 }
 
-CouleurBille Plateau::getCouleurBille(int x, int y) const
+BallColor Board::getColor(int x, int y) const
 {
-    return plateau[x][y].getBilleTrou().getCouleurBille();
+    return board[x][y].getBall().getColor();
 }
 
-Joueur * Plateau::getJoueurTrou(int x, int y) const
+Player * Board::getJoueurTrou(int x, int y) const
 {
-    return plateau[x][y].getJoueurTrou();
+    return board[x][y].getPlayer();
 }
 
-bool Plateau::getTrouEstOccupe(int x, int y) const
+bool Board::isHoleOccupied(int x, int y) const
 {
-    return plateau[x][y].estOccupe();
+    return board[x][y].isOccupied();
 }
 
-bool Plateau::verifierSuitePion(int x, int y)
+bool Board::verifierSuitePion(int x, int y)
 {
     bool suiteCinq = pentagoVerticale(x,y) || pentagoHorizontal(x,y)
             || pentagoDiagonaleDroite(x,y) || pentagoDiagonaleGauche(x,y);
     return suiteCinq;
 }
 
-bool Plateau::verifierSuitePionApresTour(int numMiniPlateau)
+bool Board::verifierSuitePionApresTour(int numMiniPlateau)
 {
     int posMiniPlaX = numMiniPlateau==1 || numMiniPlateau==2 ? 0 : 3;
     int posMiniPlaY = numMiniPlateau==1 || numMiniPlateau==3 ? 0 : 3;
@@ -68,12 +68,12 @@ bool Plateau::verifierSuitePionApresTour(int numMiniPlateau)
     bool noir = false;
     for(int i = posMiniPlaX; i<posMiniPlaX+3 && (!blanche || !noir); i++){
         for(int j = posMiniPlaY; j<posMiniPlaY+3 && (!blanche || !noir); j++){
-            if(plateau[i][j].getBilleTrou().getCouleurBille() == BLANCHE
-                    || plateau[i][j].getBilleTrou().getCouleurBille() == NOIR){
+            if(board[i][j].getBall().getColor() == WHITE
+                    || board[i][j].getBall().getColor() == BLACK){
                 suiteCinq = pentagoVerticale(i,j) || pentagoHorizontal(i,j)
                         || pentagoDiagonaleDroite(i,j) || pentagoDiagonaleGauche(i,j);
                 if(suiteCinq){
-                    if(plateau[i][j].getBilleTrou().getCouleurBille() == BLANCHE){
+                    if(board[i][j].getBall().getColor() == WHITE){
                         blanche = true;
                     }else{
                         noir = true;
@@ -85,51 +85,51 @@ bool Plateau::verifierSuitePionApresTour(int numMiniPlateau)
     return suiteCinq;
 }
 
-bool Plateau::dernierCoup()const
+bool Board::dernierCoup()const
 {
-    return nombreCoup == (plateau.size()* plateau.size());
+    return nombreCoup == (board.size()* board.size());
 }
 
-void Plateau::rotationHorlogique(int x, int y){
-    vector<vector<Trou>> platCopie (3, vector<Trou>(3));
+void Board::rotateClockwise(int x, int y){
+    vector<vector<Hole>> platCopie (3, vector<Hole>(3));
     for(int i = x, icopie = 0; i<x+3; i++, icopie++){
         for(int j = y, jcopie = 0; j<y+3; j++, jcopie++){
-            platCopie[icopie][jcopie] = plateau[i][j];
+            platCopie[icopie][jcopie] = board[i][j];
         }
     }
     for(int i = 0, icopie = x; i<platCopie.size(); i++, icopie++){
         for(int j = 0, jcopie = y; j<platCopie.at(i).size(); j++, jcopie++){
-            plateau[icopie][jcopie] = platCopie[platCopie.at(i).size()-j-1][i];
+            board[icopie][jcopie] = platCopie[platCopie.at(i).size()-j-1][i];
         }
     }
 }
 
-void Plateau::rotationAntiHorlogique(int x, int y){
-    vector<vector<Trou>> platCopie (3, vector<Trou>(3));
+void Board::rotateCounterclockwise(int x, int y){
+    vector<vector<Hole>> platCopie (3, vector<Hole>(3));
     for(int i = x, icopie = 0; i<x+3; i++, icopie++){
         for(int j = y, jcopie = 0; j<y+3; j++, jcopie++){
-            platCopie[icopie][jcopie] = plateau[i][j];
+            platCopie[icopie][jcopie] = board[i][j];
         }
     }
     for(int i = 0, icopie = x; i<platCopie.size(); i++, icopie++){
         for(int j = 0, jcopie = y; j<platCopie.at(i).size(); j++, jcopie++){
-            plateau[icopie][jcopie] = platCopie[j][platCopie.at(i).size()-i-1];
+            board[icopie][jcopie] = platCopie[j][platCopie.at(i).size()-i-1];
         }
     }
 }
 
-bool Plateau::pentagoVerticale(int x, int y){
+bool Board::pentagoVerticale(int x, int y){
     int nbMemeBille = 1;
     int i = x+1;
-    while(i < plateau.size() && nbMemeBille < 5
-          && plateau[i][y] == plateau[x][y] ){
+    while(i < board.size() && nbMemeBille < 5
+          && board[i][y] == board[x][y] ){
         nbMemeBille++;
         i++;
     }
     if(nbMemeBille<5){
         i = x-1;
         while(i >= 0 && nbMemeBille < 5
-              && plateau[i][y] == plateau[x][y] ){
+              && board[i][y] == board[x][y] ){
             nbMemeBille++;
             i--;
         }
@@ -137,18 +137,18 @@ bool Plateau::pentagoVerticale(int x, int y){
     return nbMemeBille == 5;
 }
 
-bool Plateau::pentagoHorizontal(int x, int y){
+bool Board::pentagoHorizontal(int x, int y){
     int nbMemeBille = 1;
     int i = y+1;
-    while(i < plateau[x].size() && nbMemeBille < 5
-          && plateau[x][i] == plateau[x][y]){
+    while(i < board[x].size() && nbMemeBille < 5
+          && board[x][i] == board[x][y]){
         nbMemeBille++;
         i++;
     }
     if(nbMemeBille<5){
         i = y-1;
         while(i >= 0 && nbMemeBille < 5
-              && plateau[x][i] == plateau[x][y]){
+              && board[x][i] == board[x][y]){
             nbMemeBille++;
             i--;
         }
@@ -156,11 +156,11 @@ bool Plateau::pentagoHorizontal(int x, int y){
     return nbMemeBille == 5;
 }
 
-bool Plateau::pentagoDiagonaleDroite(int x, int y){
+bool Board::pentagoDiagonaleDroite(int x, int y){
     int nbMemeBille = 1;
     int i = x-1 , j = y+1;
-    while(i>=0 && j < plateau[i].size() && nbMemeBille < 5
-          && plateau[i][j] == plateau[x][y]){
+    while(i>=0 && j < board[i].size() && nbMemeBille < 5
+          && board[i][j] == board[x][y]){
         i--;
         j++;
         nbMemeBille++;
@@ -168,8 +168,8 @@ bool Plateau::pentagoDiagonaleDroite(int x, int y){
     if(nbMemeBille<5){
         i = x+1;
         j = y-1;
-        while(i < plateau.size() && j >= 0 && nbMemeBille < 5
-              && plateau[i][j] == plateau[x][y]){
+        while(i < board.size() && j >= 0 && nbMemeBille < 5
+              && board[i][j] == board[x][y]){
             i++;
             j--;
             nbMemeBille++;
@@ -178,11 +178,11 @@ bool Plateau::pentagoDiagonaleDroite(int x, int y){
     return nbMemeBille == 5;
 }
 
-bool Plateau::pentagoDiagonaleGauche(int x, int y){
+bool Board::pentagoDiagonaleGauche(int x, int y){
     int nbMemeBille = 1;
     int i = x+1 , j = y+1;
-    while(i<plateau.size() && j < plateau[i].size() && nbMemeBille < 5
-          && plateau[i][j] == plateau[x][y]){
+    while(i<board.size() && j < board[i].size() && nbMemeBille < 5
+          && board[i][j] == board[x][y]){
         i++;
         j++;
         nbMemeBille++;
@@ -190,7 +190,7 @@ bool Plateau::pentagoDiagonaleGauche(int x, int y){
     if(nbMemeBille<5){
         i = x-1;
         j = y-1;
-        while(i >= 0 && j >= 0 && plateau[i][j] == plateau[x][y]
+        while(i >= 0 && j >= 0 && board[i][j] == board[x][y]
               && nbMemeBille < 5){
             i--;
             j--;

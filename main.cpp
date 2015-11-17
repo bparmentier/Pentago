@@ -7,43 +7,43 @@ using namespace std;
 
 int lireEntier(string phrase);
 Direction lireSens();
-void afficherTab(vector<vector<Trou> > plateau);
-string conversion(Trou trou);
+void printBoard(vector<vector<Hole> > board);
+string conversion(Hole trou);
 
 int main()
 {
     int x,y,numMini;
     Direction dir;
-    vector<Joueur> lesJoueurs;
+    vector<Player> players;
     string nom;
     cout<<"entrez nom joueur 1 : "<<endl;
     cin >> nom;
-    lesJoueurs.push_back(Joueur(nom,NOIR));
+    players.push_back(Player(nom,BLACK));
     cout<<"entrez nom joueur 2 : "<<endl;
     cin >> nom;
-    lesJoueurs.push_back(Joueur(nom,BLANCHE));
+    players.push_back(Player(nom,WHITE));
 
-    Pentago partie(lesJoueurs);
-    afficherTab(partie.getPlateau());
-    while(!partie.estTerminer()){
-        cout<<"au tour de "<<partie.getNomJoueurCourant()<<endl;
+    Pentago partie(players);
+    printBoard(partie.getBoard());
+    while(!partie.isFinished()){
+        cout<<"au tour de "<<partie.getCurrentPlayerName()<<endl;
         x = lireEntier("entrez la ligne où vous voulez placer votre bille :");
         y = lireEntier("entrez la colonne où vous voulez placer votre bille :");
         try {
-            partie.jouer(x,y);
-            afficherTab(partie.getPlateau());
+            partie.play(x,y);
+            printBoard(partie.getBoard());
             numMini = lireEntier("entrez le numéro du mini plateau que vous désirez tourner :");
             dir = lireSens();
-            partie.tourner(numMini, dir);
+            partie.rotate(numMini, dir);
         } catch (PentagoException ex) {
             cout<<ex.what()<<endl;
         }
-        afficherTab(partie.getPlateau());
+        printBoard(partie.getBoard());
     }
     if (partie.resultatEgalite()) {
         cout<<"la partie s'est terminé par une égalité !"<<endl;
     } else {
-        cout<<"la partie est terminé et le gagnant est : "<<partie.getNomGagnant()<<endl;
+        cout<<"la partie est terminé et le gagnant est : "<<partie.getWinnerName()<<endl;
     }
 }
 
@@ -71,15 +71,15 @@ Direction lireSens(){
         transform(direction.begin(), direction.end(), direction.begin(), ::toupper);
     }while(direction != "A" && direction != "H");
     if(direction == "A"){
-        return VERS_LE_BAS;
+        return COUNTERCLOCKWISE;
     }else{
-        return VERS_LE_HAUT;
+        return CLOCKWISE;
     }
 }
 
-void afficherTab(vector<vector<Trou>> plateau ){
+void printBoard(vector<vector<Hole>> board ){
     cout<<"    ";
-    for(int i = 0; i<plateau.size(); i++){
+    for(int i = 0; i<board.size(); i++){
         cout<<i<<" ";
         if(i==2){
             cout<<"  ";
@@ -87,10 +87,10 @@ void afficherTab(vector<vector<Trou>> plateau ){
     }
     cout<<endl;
     cout<<"    -------------"<<endl;
-    for(int i = 0; i<plateau.size(); i++){
+    for(int i = 0; i<board.size(); i++){
         cout<<i<<" | ";
-        for(int j = 0; j<plateau.at(i).size(); j++){
-            cout << conversion(plateau[i][j])<<" ";
+        for(int j = 0; j<board.at(i).size(); j++){
+            cout << conversion(board[i][j])<<" ";
             if(j == 2){
                 cout<<"| ";
             }
@@ -103,10 +103,10 @@ void afficherTab(vector<vector<Trou>> plateau ){
     cout<<"    -------------"<<endl;
 }
 
-string conversion(Trou trou){
-    if(trou.getBilleTrou().getCouleurBille() == BLANCHE){
+string conversion(Hole trou){
+    if(trou.getBall().getColor() == WHITE){
         return "B";
-    }else if(trou.getBilleTrou().getCouleurBille() == NOIR){
+    }else if(trou.getBall().getColor() == BLACK){
         return "N";
     }else{
         return "v";

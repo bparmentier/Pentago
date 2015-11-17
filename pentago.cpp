@@ -4,57 +4,57 @@
 
 using namespace std;
 
-Pentago::Pentago(vector<Joueur> & tabJoueurs):lesJoueurs(tabJoueurs), plateauJeu(),
-    finPartie(false)
+Pentago::Pentago(vector<Player> & players):gameManager(players), board(),
+    finished(false)
 {
 }
 
-void Pentago::jouer(int x, int y)
+void Pentago::play(int x, int y)
 {
-    if(finPartie == true){
+    if(finished == true){
         throw PentagoException("La partie est terminée !");
     }
-    this->plateauJeu.placerBille(x,y,lesJoueurs.getJoueurCourant());
-    finPartie = plateauJeu.verifierSuitePion(x,y);
+    this->board.placeBall(x,y,gameManager.getCurrentPlayer());
+    finished = board.verifierSuitePion(x,y);
 }
 
-void Pentago::tourner(int miniPlateau, Direction direction)
+void Pentago::rotate(int miniBoard, Direction direction)
 {
-    if(finPartie == true){
+    if(finished == true){
         throw string("la partie est terminé !");
     }
-    if(miniPlateau < 1 || miniPlateau > 4){
+    if(miniBoard < 1 || miniBoard > 4){
         throw PentagoException("le mini-plateau choisit est incorrecte !");
     }
-    plateauJeu.tournerMiniPlateau(miniPlateau, direction);
-    finPartie = plateauJeu.verifierSuitePionApresTour(miniPlateau);
-    if(!finPartie){
-        lesJoueurs.joueurSuivant();
+    board.rotateMiniBoard(miniBoard, direction);
+    finished = board.verifierSuitePionApresTour(miniBoard);
+    if(!finished){
+        gameManager.nextPlayer();
     }
 }
 
-bool Pentago::estTerminer() const
+bool Pentago::isFinished() const
 {
-    return finPartie || plateauJeu.dernierCoup();
+    return finished || board.dernierCoup();
 }
 
 bool Pentago::resultatEgalite() const{
-    return plateauJeu.dernierCoup();
+    return board.dernierCoup();
 }
 
-string Pentago::getNomGagnant() {
-    if(!finPartie){
+string Pentago::getWinnerName() {
+    if(!finished){
         throw string("error, la partie n'est pas terminé");
     }
-    return lesJoueurs.getJoueurCourant()->getNom();
+    return gameManager.getCurrentPlayer()->getName();
 }
 
-string Pentago::getNomJoueurCourant()
+string Pentago::getCurrentPlayerName()
 {
-    return lesJoueurs.getJoueurCourant()->getNom();
+    return gameManager.getCurrentPlayer()->getName();
 }
 
-vector<vector<Trou> > Pentago::getPlateau() const
+vector<vector<Hole> > Pentago::getBoard() const
 {
-    return plateauJeu.getPlateau();
+    return board.getBoard();
 }
