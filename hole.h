@@ -3,7 +3,7 @@
 
 #include "ball.h"
 #include "player.h"
-#include "type.h"
+#include "ballcolor.h"
 
 class Hole
 {

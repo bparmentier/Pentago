@@ -25,7 +25,7 @@ void Board::rotateMiniBoard(int numMiniPlateau, Direction direction)
 {
     int posMiniPlaX = numMiniPlateau==1 || numMiniPlateau==2 ? 0 : 3;
     int posMiniPlaY = numMiniPlateau==1 || numMiniPlateau==3 ? 0 : 3;
-    if(direction==COUNTERCLOCKWISE){
+    if(direction==Direction::COUNTERCLOCKWISE){
         rotateCounterclockwise(posMiniPlaX,posMiniPlaY);
     }else{
         rotateClockwise(posMiniPlaX,posMiniPlaY);
@@ -68,12 +68,12 @@ bool Board::verifierSuitePionApresTour(int numMiniPlateau)
     bool noir = false;
     for(int i = posMiniPlaX; i<posMiniPlaX+3 && (!blanche || !noir); i++){
         for(int j = posMiniPlaY; j<posMiniPlaY+3 && (!blanche || !noir); j++){
-            if(board[i][j].getBall().getColor() == WHITE
-                    || board[i][j].getBall().getColor() == BLACK){
+            if(board[i][j].getBall().getColor() == BallColor::WHITE
+                    || board[i][j].getBall().getColor() == BallColor::BLACK){
                 suiteCinq = pentagoVerticale(i,j) || pentagoHorizontal(i,j)
                         || pentagoDiagonaleDroite(i,j) || pentagoDiagonaleGauche(i,j);
                 if(suiteCinq){
-                    if(board[i][j].getBall().getColor() == WHITE){
+                    if(board[i][j].getBall().getColor() == BallColor::WHITE){
                         blanche = true;
                     }else{
                         noir = true;

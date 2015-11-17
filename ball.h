@@ -1,7 +1,7 @@
 #ifndef BALL_H
 #define BALL_H
 
-#include "type.h"
+#include "ballcolor.h"
 
 class Ball
 {

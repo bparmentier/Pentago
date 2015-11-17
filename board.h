@@ -3,7 +3,8 @@
 
 #include <vector>
 #include "hole.h"
-#include "type.h"
+#include "ballcolor.h"
+#include "direction.h"
 
 class Board
 {

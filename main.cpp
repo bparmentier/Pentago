@@ -18,10 +18,10 @@ int main()
     string nom;
     cout<<"entrez nom joueur 1 : "<<endl;
     cin >> nom;
-    players.push_back(Player(nom,BLACK));
+    players.push_back(Player(nom,BallColor::BLACK));
     cout<<"entrez nom joueur 2 : "<<endl;
     cin >> nom;
-    players.push_back(Player(nom,WHITE));
+    players.push_back(Player(nom,BallColor::WHITE));
 
     Pentago partie(players);
     printBoard(partie.getBoard());
@@ -71,9 +71,9 @@ Direction lireSens(){
         transform(direction.begin(), direction.end(), direction.begin(), ::toupper);
     }while(direction != "A" && direction != "H");
     if(direction == "A"){
-        return COUNTERCLOCKWISE;
+        return Direction::COUNTERCLOCKWISE;
     }else{
-        return CLOCKWISE;
+        return Direction::CLOCKWISE;
     }
 }
 
@@ -104,9 +104,9 @@ void printBoard(vector<vector<Hole>> board ){
 }
 
 string conversion(Hole trou){
-    if(trou.getBall().getColor() == WHITE){
+    if(trou.getBall().getColor() == BallColor::WHITE){
         return "B";
-    }else if(trou.getBall().getColor() == BLACK){
+    }else if(trou.getBall().getColor() == BallColor::BLACK){
         return "N";
     }else{
         return "v";

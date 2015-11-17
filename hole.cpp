@@ -1,7 +1,7 @@
 #include "hole.h"
-#include "type.h"
+#include "ballcolor.h"
 
-Hole::Hole(): ball(NONE), player(nullptr)
+Hole::Hole(): ball(BallColor::NONE), player(nullptr)
 {
 }
 

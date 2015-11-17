@@ -15,7 +15,6 @@ SOURCES += main.cpp \
 
 HEADERS += \
     pentago.h \
-    type.h \
     pentagoexception.h \
     o_sdo/observateur.h \
     o_sdo/sujetdobservation.h \
@@ -23,5 +22,7 @@ HEADERS += \
     gamemanager.h \
     player.h \
     hole.h \
-    ball.h
+    ball.h \
+    direction.h \
+    ballcolor.h
 

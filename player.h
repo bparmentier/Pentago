@@ -1,7 +1,7 @@
 #ifndef JOUEUR_H
 #define JOUEUR_H
 
-#include "type.h"
+#include "ballcolor.h"
 #include <string>
 
 class Player
