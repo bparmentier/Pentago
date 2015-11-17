@@ -10,7 +10,8 @@ SOURCES += main.cpp \
     gestionnairejoueur.cpp \
     joueur.cpp \
     pentago.cpp \
-    pentagoexception.cpp
+    pentagoexception.cpp \
+    o_sdo/sujetdobservation.cpp
 
 HEADERS += \
     plateau.h \
@@ -20,5 +21,7 @@ HEADERS += \
     joueur.h \
     pentago.h \
     type.h \
-    pentagoexception.h
+    pentagoexception.h \
+    o_sdo/observateur.h \
+    o_sdo/sujetdobservation.h
 
