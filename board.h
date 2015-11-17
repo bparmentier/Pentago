@@ -16,7 +16,7 @@ private:
 public:
     Board();
     void placeBall(int x, int y, Player *player);
-    void rotateMiniBoard(int numMiniPlateau, Direction direction);
+    void rotateMiniBoard(int miniBoardNum, Direction direction);
     std::vector<std::vector<Hole>> getBoard() const;
     BallColor getColor(int x, int y) const;
     Player * getJoueurTrou(int x, int y) const;
@@ -26,8 +26,7 @@ public:
     bool dernierCoup() const;
 
 private:
-    void rotateClockwise(int x, int y);
-    void rotateCounterclockwise(int x, int y);
+    void rotate(int startColumn, int startLine, Direction direction);
     bool pentagoVerticale(int x, int y);
     bool pentagoHorizontal(int x, int y);
     bool pentagoDiagonaleDroite(int x, int y);

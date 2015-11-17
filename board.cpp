@@ -21,15 +21,11 @@ void Board::placeBall(int x, int y, Player * player)
     nombreCoup++;
 }
 
-void Board::rotateMiniBoard(int numMiniPlateau, Direction direction)
+void Board::rotateMiniBoard(int miniBoardNum, Direction direction)
 {
-    int posMiniPlaX = numMiniPlateau==1 || numMiniPlateau==2 ? 0 : 3;
-    int posMiniPlaY = numMiniPlateau==1 || numMiniPlateau==3 ? 0 : 3;
-    if(direction==Direction::COUNTERCLOCKWISE){
-        rotateCounterclockwise(posMiniPlaX,posMiniPlaY);
-    }else{
-        rotateClockwise(posMiniPlaX,posMiniPlaY);
-    }
+    int miniBoardColumn = miniBoardNum == 1 || miniBoardNum == 2 ? 0 : 3;
+    int miniBoardLine = miniBoardNum == 1 || miniBoardNum == 3 ? 0 : 3;
+    rotate(miniBoardColumn, miniBoardLine, direction);
 }
 
 vector<vector<Hole> > Board::getBoard() const
@@ -90,30 +86,20 @@ bool Board::dernierCoup()const
     return nombreCoup == (board.size()* board.size());
 }
 
-void Board::rotateClockwise(int x, int y){
-    vector<vector<Hole>> platCopie (3, vector<Hole>(3));
-    for(int i = x, icopie = 0; i<x+3; i++, icopie++){
-        for(int j = y, jcopie = 0; j<y+3; j++, jcopie++){
-            platCopie[icopie][jcopie] = board[i][j];
+void Board::rotate(int startColumn, int startLine, Direction direction){
+    vector<vector<Hole>> boardCopy (3, vector<Hole>(3));
+    for(int i = startColumn, icopy = 0; i<startColumn+3; i++, icopy++){
+        for(int j = startLine, jcopy = 0; j<startLine+3; j++, jcopy++){
+            boardCopy[icopy][jcopy] = board[i][j];
         }
     }
-    for(int i = 0, icopie = x; i<platCopie.size(); i++, icopie++){
-        for(int j = 0, jcopie = y; j<platCopie.at(i).size(); j++, jcopie++){
-            board[icopie][jcopie] = platCopie[platCopie.at(i).size()-j-1][i];
-        }
-    }
-}
-
-void Board::rotateCounterclockwise(int x, int y){
-    vector<vector<Hole>> platCopie (3, vector<Hole>(3));
-    for(int i = x, icopie = 0; i<x+3; i++, icopie++){
-        for(int j = y, jcopie = 0; j<y+3; j++, jcopie++){
-            platCopie[icopie][jcopie] = board[i][j];
-        }
-    }
-    for(int i = 0, icopie = x; i<platCopie.size(); i++, icopie++){
-        for(int j = 0, jcopie = y; j<platCopie.at(i).size(); j++, jcopie++){
-            board[icopie][jcopie] = platCopie[j][platCopie.at(i).size()-i-1];
+    for(int i = 0, icopy = startColumn; i < boardCopy.size(); i++, icopy++){
+        for(int j = 0, jcopy = startLine; j < boardCopy.at(i).size(); j++, jcopy++){
+            if (direction == Direction::CLOCKWISE) {
+                board[icopy][jcopy] = boardCopy[boardCopy.at(i).size()-j-1][i];
+            } else {
+                board[icopy][jcopy] = boardCopy[j][boardCopy.at(i).size()-i-1];
+            }
         }
     }
 }
