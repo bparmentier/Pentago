@@ -28,7 +28,7 @@ void Pentago::tourner(int miniPlateau, Direction direction)
     }
     plateauJeu.tournerMiniPlateau(miniPlateau, direction);
     finPartie = plateauJeu.verifierSuitePionApresTour(miniPlateau);
-    if(finPartie){
+    if(!finPartie){
         lesJoueurs.joueurSuivant();
     }
 }

@@ -27,29 +27,23 @@ int main()
     afficherTab(partie.getPlateau());
     while(!partie.estTerminer()){
         cout<<"au tour de "<<partie.getNomJoueurCourant()<<endl;
-        x = lireEntier("entrez la ligne ou vous voulez placer votre bille :");
-        y = lireEntier("entrez la colonne ou vous voulez placer votre bille :");
-        try{
+        x = lireEntier("entrez la ligne où vous voulez placer votre bille :");
+        y = lireEntier("entrez la colonne où vous voulez placer votre bille :");
+        try {
             partie.jouer(x,y);
-        }catch(PentagoException ex){
-            cout<<ex.what()<<endl;
-        }
-        afficherTab(partie.getPlateau());
-        numMini = lireEntier("entrez le numéro du mini plateau que vous désirez tourner :");
-        dir = lireSens();
-        try{
+            afficherTab(partie.getPlateau());
+            numMini = lireEntier("entrez le numéro du mini plateau que vous désirez tourner :");
+            dir = lireSens();
             partie.tourner(numMini, dir);
-        }catch(PentagoException ex){
+        } catch (PentagoException ex) {
             cout<<ex.what()<<endl;
         }
         afficherTab(partie.getPlateau());
-        if(partie.estTerminer()){
-            if(partie.resultatEgalite()){
-                cout<<"la partie s'est terminé par une égalité !"<<endl;
-            }else{
-                cout<<"la partie est terminé et le gagnant est : "<<partie.getNomGagnant()<<endl;
-            }
-        }
+    }
+    if (partie.resultatEgalite()) {
+        cout<<"la partie s'est terminé par une égalité !"<<endl;
+    } else {
+        cout<<"la partie est terminé et le gagnant est : "<<partie.getNomGagnant()<<endl;
     }
 }
 
