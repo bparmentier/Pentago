@@ -12,12 +12,12 @@ PentagoGui::PentagoGui(QWidget *parent) :
     connect(thisClient, SIGNAL(connected()), this, SLOT(connected()));
     connect(thisClient, SIGNAL(disconnected()), this, SLOT(disconnected()));
     connect(thisClient, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(errorSocket(QAbstractSocket::SocketError)));
+    connect(ui->actionConnect, &QAction::triggered,
+            this, &PentagoGui::onConnectClicked);
+    connect(ui->actionQuit, &QAction::triggered,
+            &QCoreApplication::quit);
 
     lengthMessage = 0;
-
-    // A SUPPRIMER JUSTE POUR TESTER
-    thisClient->abort(); // se fait dans le slot onConnectClicked
-    thisClient->connectToHost("127.0.0.1", 50885); // se fait dans le slot onConnectClicked
 }
 
 PentagoGui::~PentagoGui()
