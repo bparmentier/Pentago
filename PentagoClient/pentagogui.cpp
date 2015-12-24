@@ -6,6 +6,7 @@ PentagoGui::PentagoGui(QWidget *parent) :
     ui(new Ui::PentagoGui)
 {
     ui->setupUi(this);
+    ui->graphicsView->setHidden(true);
 
     thisClient = new QTcpSocket(this);
     connect(thisClient, SIGNAL(readyRead()), this, SLOT(readyRead()));
@@ -60,10 +61,12 @@ void PentagoGui::onConnectClicked() // bouton du menu qui permet de lancer une p
     thisClient->connectToHost("127.0.0.1", 50885);
 }
 
-
 void PentagoGui::connected() // Ce slot est appelé lorsque la connexion au serveur a réussi
 {
     // lorsqu'on a réussi à se connecter ! initialiser l'interface ?
+    board = new QBoard(this);
+    ui->graphicsView->setHidden(false);
+    ui->graphicsView->setScene(board);
 }
 
 void PentagoGui::readyRead()

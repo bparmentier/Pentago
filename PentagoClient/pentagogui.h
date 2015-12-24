@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QtNetwork>
 #include "message.h"
+#include "qboard.h"
 
 namespace Ui {
 class PentagoGui;
@@ -21,6 +22,7 @@ private:
     Ui::PentagoGui * ui;
     QTcpSocket * thisClient;
     quint16 lengthMessage;
+    QBoard *board;
 
 private slots:
     void onPlayRequest();
