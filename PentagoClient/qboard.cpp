@@ -36,22 +36,16 @@ void QBoard::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     QGraphicsScene::mousePressEvent(event);
 
-    if (!event->isAccepted()) {
-
-
-
-    //if (item) {
     foreach(auto item, items(event->scenePos())) {
-        qDebug() << item->type();
         if(item->type() == QHole::Type) {
-            qDebug() << "hello";
+            // TODO: Set ball color depending on player
             QBall *ball = new QBall(QBallColor::WHITE);
             addItem(ball);
             ball->setPos(item->scenePos());
 
+            // TODO: Send notification to server
+
             break;
         }
-    //}
-    }
     }
 }

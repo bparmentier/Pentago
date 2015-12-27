@@ -27,6 +27,4 @@ void QBall::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWi
     painter->setBrush(gradient);
 
     painter->drawEllipse(rect);
-
-
 }
