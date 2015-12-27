@@ -18,13 +18,18 @@ SOURCES += main.cpp\
         pentagogui.cpp \
     message.cpp \
     o_sdo/sujetdobservation.cpp \
-    qboard.cpp
+    qboard.cpp \
+    qhole.cpp \
+    qball.cpp
 
 HEADERS  += pentagogui.h \
     message.h \
     type.h \
     o_sdo/observateur.h \
     o_sdo/sujetdobservation.h \
-    qboard.h
+    qboard.h \
+    qhole.h \
+    qball.h \
+    qballcolor.h
 
 FORMS    += pentagogui.ui

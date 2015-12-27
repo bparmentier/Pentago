@@ -20,6 +20,9 @@ private:
     void drawMiniBoard(qreal x, qreal y);
     void drawHoles();
 
+protected:
+    void mousePressEvent(QGraphicsSceneMouseEvent *event);
+
 public:
     QBoard(QWidget *parent = 0);
 };
