@@ -36,3 +36,5 @@ debug
 
 # Project-specific
 Pentago
+PentagoClient/PentagoClient
+PentagoServer/PentagoServer
