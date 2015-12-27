@@ -11,8 +11,8 @@ class ThreadManager : public QThread
 {
     Q_OBJECT
 private:
-    QTcpSocket * firstSocket;
-    QTcpSocket * secondClient;
+    QTcpSocket * firstClientSocket;
+    QTcpSocket * secondClientSocket;
     QTcpSocket * nextSocketPlayer; // joueur duquel on attend le mouvement, si pas lui on refuse de jouer le mouvement demandé !
     Pentago * game;
     quint16 lengthMessage;

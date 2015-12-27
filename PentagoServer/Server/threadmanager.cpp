@@ -7,31 +7,34 @@ using namespace std;
 ThreadManager::ThreadManager(qintptr ID, qintptr ID2, QObject *parent) :
     QThread(parent), game(nullptr)
 {
+    qDebug() << "new thread created";
     vector<Player> players;
     players.push_back(Player("player1",BallColor::BLACK));
     players.push_back(Player("player2",BallColor::WHITE));
     game = new Pentago(players);
 
-    firstSocket = new QTcpSocket();
-    if(!firstSocket->setSocketDescriptor(ID))
+    /* First client */
+    firstClientSocket = new QTcpSocket();
+    if(!firstClientSocket->setSocketDescriptor(ID))
     {
         // something's wrong, we just emit a signal
-        emit error(firstSocket->error());
+        emit error(firstClientSocket->error());
         return;
     }
-    connect(firstSocket, SIGNAL(readyRead()), this, SLOT(readyReadFirstClient()), Qt::DirectConnection);
-    connect(firstSocket, SIGNAL(disconnected()), this, SLOT(disconnected()));
+    connect(firstClientSocket, SIGNAL(readyRead()), this, SLOT(readyReadFirstClient()), Qt::DirectConnection);
+    connect(firstClientSocket, SIGNAL(disconnected()), this, SLOT(disconnected()));
 
-    secondClient = new QTcpSocket();
-    if(!secondClient->setSocketDescriptor(ID2))
+    /* Second client */
+    secondClientSocket = new QTcpSocket();
+    if(!secondClientSocket->setSocketDescriptor(ID2))
     {
-        emit error(secondClient->error());
+        emit error(secondClientSocket->error());
         return;
     }
-    connect(secondClient, SIGNAL(readyRead()), this, SLOT(readyReadSecondClient()), Qt::DirectConnection);
-    connect(secondClient, SIGNAL(disconnected()), this, SLOT(disconnected()));
+    connect(secondClientSocket, SIGNAL(readyRead()), this, SLOT(readyReadSecondClient()), Qt::DirectConnection);
+    connect(secondClientSocket, SIGNAL(disconnected()), this, SLOT(disconnected()));
 
-    this->nextSocketPlayer = firstSocket;
+    this->nextSocketPlayer = firstClientSocket;
     this->lengthMessage = 0;
 }
 
@@ -45,12 +48,12 @@ void ThreadManager::run()
 
 void ThreadManager::readyReadFirstClient()
 {
-    readFromSpecifiedSocket(firstSocket);
+    readFromSpecifiedSocket(firstClientSocket);
 }
 
 void ThreadManager::readyReadSecondClient()
 {
-    readFromSpecifiedSocket(secondClient);
+    readFromSpecifiedSocket(secondClientSocket);
 }
 
 void ThreadManager::readFromSpecifiedSocket(QTcpSocket * thisSocket)
@@ -90,13 +93,13 @@ void ThreadManager::processTheRequest(Message message)
 
 void ThreadManager::disconnected() // probleme lors de la deconnexion d'un client, envoie à l'autre client qu'il a gagné par forfait puis le deconnecter? :/
 {
-    if(firstSocket != nullptr){
-        firstSocket->deleteLater();
-        firstSocket = nullptr;
+    if(firstClientSocket != nullptr){
+        firstClientSocket->deleteLater();
+        firstClientSocket = nullptr;
     }
-    if(secondClient != nullptr){
-        secondClient->deleteLater();
-        secondClient = nullptr;
+    if(secondClientSocket != nullptr){
+        secondClientSocket->deleteLater();
+        secondClientSocket = nullptr;
     }
     if(game != nullptr){
         delete game;
@@ -115,6 +118,6 @@ void ThreadManager::sendResponseOfServer(const Message & message)
     out.device()->seek(0);
     out << (quint16) (packet.size() - sizeof(quint16));
 
-    firstSocket->write(packet);
-    secondClient->write(packet);
+    firstClientSocket->write(packet);
+    secondClientSocket->write(packet);
 }

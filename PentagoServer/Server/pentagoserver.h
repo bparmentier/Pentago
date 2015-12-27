@@ -6,7 +6,7 @@
 class PentagoServer : public QTcpServer
 {
     Q_OBJECT
-    QList<qintptr> DescriptorList;
+    QList<qintptr> descriptorList;
 public:
     explicit PentagoServer(QObject *parent = 0);
     void startServer();

@@ -23,10 +23,11 @@ void PentagoServer::startServer()
 void PentagoServer::incomingConnection(qintptr socketDescriptor)
 {
     qDebug() << socketDescriptor << " Connecting...";
-    this->DescriptorList << socketDescriptor;
-    if(DescriptorList.size() == 2){
-        ThreadManager * thread = new ThreadManager(DescriptorList.at(0),DescriptorList.at(1), this);
-        this->DescriptorList.clear();
+    this->descriptorList << socketDescriptor;
+    if(descriptorList.size() == 2){
+        ThreadManager * thread = new ThreadManager(descriptorList.at(0), descriptorList.at(1), this);
+
+        this->descriptorList.clear();
         // connect signal/slot. Once a thread is not needed, it will be beleted later
         connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
         thread->start();
