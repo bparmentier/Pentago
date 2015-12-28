@@ -6,6 +6,8 @@
 QBoard::QBoard(QWidget *parent) :
     QGraphicsScene{parent}
 {
+    pentagoGui = dynamic_cast<PentagoGui*>(parent);
+    x,y=0;
     drawMiniBoard(0, 0);
     drawMiniBoard(0, 160);
     drawMiniBoard(160, 0);
@@ -38,14 +40,35 @@ void QBoard::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
     foreach(auto item, items(event->scenePos())) {
         if(item->type() == QHole::Type) {
-            // TODO: Set ball color depending on player
-            QBall *ball = new QBall(QBallColor::WHITE);
+            QBall *ball = new QBall(color);
             addItem(ball);
             ball->setPos(item->scenePos());
-
-            // TODO: Send notification to server
-
+            pentagoGui->play((event->pos().y()-10)/50,(event->pos().x()-10)/50);
             break;
         }
     }
 }
+void QBoard::setColor(QBallColor aColor){
+    color = aColor;
+}
+
+int QBoard::getX()
+{
+  return x;
+}
+
+int QBoard::getY()
+{
+    return y;
+}
+
+
+
+
+
+
+
+
+
+
+

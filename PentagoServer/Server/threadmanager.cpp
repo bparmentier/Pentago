@@ -5,14 +5,13 @@
 using namespace std;
 
 ThreadManager::ThreadManager(qintptr ID, qintptr ID2, QObject *parent) :
-    QThread(parent), game(nullptr)
+    QThread(parent), game(nullptr),firstClientReady{false},secondClientReady{false}
 {
     qDebug() << "new thread created";
     vector<Player> players;
     players.push_back(Player("player1",BallColor::BLACK));
     players.push_back(Player("player2",BallColor::WHITE));
     game = new Pentago(players);
-
     /* First client */
     firstClientSocket = new QTcpSocket();
     if(!firstClientSocket->setSocketDescriptor(ID))
@@ -36,6 +35,12 @@ ThreadManager::ThreadManager(qintptr ID, qintptr ID2, QObject *parent) :
 
     this->nextSocketPlayer = firstClientSocket;
     this->lengthMessage = 0;
+
+    //Envoyer aux joueurs les parametres de la partie
+    Message msg1(TypeMessage::BEGIN_STATE,PlayerColor::WHITE);
+    Message msg2(TypeMessage::BEGIN_STATE,PlayerColor::BLACK);
+    sendResponseOfServer(msg1,firstClientSocket);
+    sendResponseOfServer(msg2,secondClientSocket);
 }
 
 void ThreadManager::run()
@@ -69,26 +74,47 @@ void ThreadManager::readFromSpecifiedSocket(QTcpSocket * thisSocket)
         return;
     Message message;
     in >> message;
-    processTheRequest(message);
+    processTheRequest(message,thisSocket);
     lengthMessage = 0;
 }
+void ThreadManager::startPlay(){
+    Message msg(TypeMessage::PLAY_STATE,PlayerColor::BLACK,0,0,0,' ',false,true,QVector<QVector<QChar>>());
+    Message msg2(TypeMessage::PLAY_STATE,PlayerColor::BLACK,0,0,0,' ',false,false,QVector<QVector<QChar>>());
+    sendResponseOfServer(msg,firstClientSocket);
+    sendResponseOfServer(msg2,secondClientSocket);
+}
 
-void ThreadManager::processTheRequest(Message message)
+void ThreadManager::processTheRequest(Message message,QTcpSocket * socket)
 {
     Message serverResponse;
     switch(message.getType()){
+    case TypeMessage::BEGIN_STATE:
+        if(socket == firstClientSocket) {
+            firstClientReady = true;
+             qDebug() << "Player1 Ready";
+        }else if (socket == secondClientSocket) {
+            secondClientReady = true;
+            qDebug() << "Player2 Ready";
+        }
+        if(firstClientReady && secondClientReady){
+            startPlay();
+        }
+        break;
     case TypeMessage::PLAY:
-        // action on play request
+        game->play(message.getRow(),message.getColumn());
+        qDebug()<<"Played";
+        sendBoardToClients();
+        sendRequestRotate();
         break;
     case TypeMessage::ROTATE:
         // action on rotate request
         break;
     }
-    sendResponseOfServer(serverResponse); // mise à jour de l'interface du client
+    /*sendResponseOfServer(serverResponse); // mise à jour de l'interface du client
     if(game->isFinished()){
         serverResponse = Message();
         sendResponseOfServer(serverResponse); // envoie de l'etat final du jeu ?
-    }
+    }*/
 }
 
 void ThreadManager::disconnected() // probleme lors de la deconnexion d'un client, envoie à l'autre client qu'il a gagné par forfait puis le deconnecter? :/
@@ -120,4 +146,26 @@ void ThreadManager::sendResponseOfServer(const Message & message)
 
     firstClientSocket->write(packet);
     secondClientSocket->write(packet);
+}
+void ThreadManager::sendResponseOfServer(const Message & message,QTcpSocket *socket)
+{
+    QByteArray packet;
+    QDataStream out(&packet, QIODevice::WriteOnly);
+
+    out << (quint16) 0;
+    out << message;
+    out.device()->seek(0);
+    out << (quint16) (packet.size() - sizeof(quint16));
+
+    socket->write(packet);
+
+}
+void ThreadManager::sendBoardToClients(){
+    Message msg(TypeMessage::BOARD_STATE,QVector<QVector<QChar>>());
+    sendResponseOfServer(msg);
+
+}
+
+void ThreadManager::sendRequestRotate(){
+
 }

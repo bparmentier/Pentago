@@ -1,5 +1,6 @@
 #include "pentagogui.h"
 #include "ui_pentagogui.h"
+#include "qhole.h"
 
 PentagoGui::PentagoGui(QWidget *parent) :
     QMainWindow(parent),
@@ -7,7 +8,7 @@ PentagoGui::PentagoGui(QWidget *parent) :
 {
     ui->setupUi(this);
     ui->graphicsView->setHidden(true);
-
+    qApp->installEventFilter(this);
     thisClient = new QTcpSocket(this);
     connect(thisClient, SIGNAL(readyRead()), this, SLOT(readyRead()));
     connect(thisClient, SIGNAL(connected()), this, SLOT(connected()));
@@ -25,6 +26,12 @@ PentagoGui::~PentagoGui()
 {
     delete thisClient;
     delete ui;
+}
+
+PentagoGui::play(int x, int y)
+{
+    Message msg(TypeMessage::PLAY,PlayerColor::BLACK,x,y,0,' ',false,true,QVector<QVector<QChar>>());
+    sendMessageToServer(msg);
 }
 
 void PentagoGui::onPlayRequest()
@@ -52,8 +59,38 @@ void PentagoGui::sendMessageToServer(Message messageToSend)
 
 void PentagoGui::processTheMessage(Message messageFromServer)
 {
+    switch (messageFromServer.getType()) {
+    case TypeMessage::BEGIN_STATE:
+    {
+        PlayerColor color = messageFromServer.getColor();
+        qDebug() << "Message recu";
+        if(color == PlayerColor::BLACK){
+            board->setColor(QBallColor::BLACK);
+        }else{
+            board->setColor(QBallColor::WHITE);
+        }
+        sendBeginStateToServer(color);
+        break;
+    }
+    case TypeMessage::PLAY_STATE:
+
+    {
+        qDebug()<<"Request to play from server";
+        break;
+    }
+    case TypeMessage::BOARD_STATE:
+    {
+        qDebug()<<"Board state received";
+        break;
+    }
+    }
     //traitement de la reponse recu par le server + mise à jour interface ?
 }
+void PentagoGui::sendBeginStateToServer(PlayerColor color){
+    Message msg(TypeMessage::BEGIN_STATE,color);
+    sendMessageToServer(msg);
+}
+
 
 void PentagoGui::onConnectClicked() // bouton du menu qui permet de lancer une partie et ainsi de se connecter au serveur?
 {
@@ -67,6 +104,7 @@ void PentagoGui::connected() // Ce slot est appelé lorsque la connexion au serv
     board = new QBoard(this);
     ui->graphicsView->setHidden(false);
     ui->graphicsView->setScene(board);
+
 }
 
 void PentagoGui::readyRead()
@@ -75,7 +113,7 @@ void PentagoGui::readyRead()
     if (lengthMessage == 0)
     {
         if (thisClient->bytesAvailable() < (int)sizeof(quint16))
-             return;
+            return;
         in >> lengthMessage;
     }
     if (thisClient->bytesAvailable() < lengthMessage)
@@ -97,16 +135,16 @@ void PentagoGui::errorSocket(QAbstractSocket::SocketError error) // Ce slot est 
 {
     switch(error)
     {
-        case QAbstractSocket::HostNotFoundError:
-            qDebug() << "ERREUR : le serveur n'a pas pu être trouvé. Vérifiez l'IP et le port.";
-            break;
-        case QAbstractSocket::ConnectionRefusedError:
-            qDebug() << "ERREUR : le serveur a refusé la connexion. Vérifiez si le programme \"serveur\" a bien été lancé. Vérifiez aussi l'IP et le port.";
-            break;
-        case QAbstractSocket::RemoteHostClosedError:
-            qDebug() <<"ERREUR : le serveur a coupé la connexion.";
-            break;
-        default:
-            qDebug() <<"ERREUR : " << thisClient->errorString();
+    case QAbstractSocket::HostNotFoundError:
+        qDebug() << "ERREUR : le serveur n'a pas pu être trouvé. Vérifiez l'IP et le port.";
+        break;
+    case QAbstractSocket::ConnectionRefusedError:
+        qDebug() << "ERREUR : le serveur a refusé la connexion. Vérifiez si le programme \"serveur\" a bien été lancé. Vérifiez aussi l'IP et le port.";
+        break;
+    case QAbstractSocket::RemoteHostClosedError:
+        qDebug() <<"ERREUR : le serveur a coupé la connexion.";
+        break;
+    default:
+        qDebug() <<"ERREUR : " << thisClient->errorString();
     }
 }

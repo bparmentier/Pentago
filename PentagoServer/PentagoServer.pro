@@ -42,6 +42,7 @@ HEADERS  += \
     Server/message.h \
     Server/pentagoserver.h \
     Server/type.h \
-    Server/threadmanager.h
+    Server/threadmanager.h \
+    Server/playercolor.h
 
 FORMS    +=

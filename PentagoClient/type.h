@@ -10,6 +10,7 @@ enum class TypeMessage {
     ROTATE_STATE,
     FINAL_STATE,
     BEGIN_STATE,
+    BOARD_STATE,
     ERROR
 };
 
@@ -34,8 +35,11 @@ inline QDataStream &operator<<( QDataStream &flux, TypeMessage const& type)
     case TypeMessage::BEGIN_STATE:
         flux << 6;
         break;
-    case TypeMessage::ERROR:
+    case TypeMessage::BOARD_STATE:
         flux << 7;
+        break;
+    case TypeMessage::ERROR:
+        flux << 8;
         break;
     }
     return flux;
@@ -65,6 +69,9 @@ inline void operator>>( QDataStream &flux, TypeMessage & type)
         type = TypeMessage::BEGIN_STATE;
         break;
     case 7:
+        type = TypeMessage::BOARD_STATE;
+        break;
+    case 8:
         type = TypeMessage::ERROR;
         break;
     }

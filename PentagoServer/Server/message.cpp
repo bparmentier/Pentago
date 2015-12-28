@@ -1,11 +1,10 @@
 #include "message.h"
-
 Message::Message(){
 
 }
 
-Message::Message(TypeMessage type, int row, int column, QString color,
-        int miniBoard, QChar direction, bool winner, bool yourTurn){
+Message::Message(TypeMessage type, PlayerColor color, int row, int column,
+        int miniBoard, QChar direction, bool winner, bool yourTurn, QVector<QVector<QChar>> board){
     this->type = type;
     this->row = row;
     this->column = column;
@@ -14,8 +13,16 @@ Message::Message(TypeMessage type, int row, int column, QString color,
     this->direction = direction;
     this->winner = winner;
     this->yourTurn = yourTurn;
+    this->board = board;
 }
-
+Message::Message(TypeMessage type,PlayerColor color):
+    type{type},color{color}
+{
+}
+Message::Message(TypeMessage type,QVector<QVector<QChar>> board):
+    type{type},board{board}
+{
+}
 TypeMessage Message::getType() const{
     return type;
 }
@@ -28,12 +35,15 @@ int Message::getColumn() const{
     return column;
 }
 
-QString Message::getColor() const{
+PlayerColor Message::getColor() const{
     return color;
 }
 
-int Message::getBoard() const{
+int Message::getMiniBoard() const{
     return miniBoard;
+}
+QVector<QVector<QChar>> Message::getBoard()const{
+    return board;
 }
 
 QChar Message::getDirection() const{

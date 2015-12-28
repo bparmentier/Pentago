@@ -53,6 +53,9 @@ string Pentago::getCurrentPlayerName()
 {
     return gameManager.getCurrentPlayer()->getName();
 }
+BallColor Pentago::getCurrentPLayerBallColor(){
+    return gameManager.getCurrentPlayer()->getBallColor();
+}
 
 vector<vector<Hole> > Pentago::getBoard() const
 {

@@ -30,6 +30,7 @@ HEADERS  += pentagogui.h \
     qboard.h \
     qhole.h \
     qball.h \
-    qballcolor.h
+    qballcolor.h \
+    playercolor.h
 
 FORMS    += pentagogui.ui

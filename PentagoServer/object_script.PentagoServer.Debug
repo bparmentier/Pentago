@@ -1,0 +1,16 @@
+INPUT(
+./debug\main.o
+./debug\ball.o
+./debug\board.o
+./debug\gamemanager.o
+./debug\hole.o
+./debug\pentago.o
+./debug\pentagoexception.o
+./debug\player.o
+./debug\sujetdobservation.o
+./debug\message.o
+./debug\pentagoserver.o
+./debug\threadmanager.o
+./debug\moc_pentagoserver.o
+./debug\moc_threadmanager.o
+);

@@ -21,6 +21,7 @@ public:
     bool resultatEgalite() const;
     std::string getWinnerName();
     std::string getCurrentPlayerName();
+    BallColor getCurrentPLayerBallColor();
     std::vector<std::vector<Hole>> getBoard() const;
 
 };

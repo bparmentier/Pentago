@@ -6,6 +6,7 @@
 #include <QDebug>
 #include "business/pentago.h"
 #include "message.h"
+#include "type.h"
 
 class ThreadManager : public QThread
 {
@@ -13,6 +14,8 @@ class ThreadManager : public QThread
 private:
     QTcpSocket * firstClientSocket;
     QTcpSocket * secondClientSocket;
+    bool firstClientReady;
+    bool secondClientReady;
     QTcpSocket * nextSocketPlayer; // joueur duquel on attend le mouvement, si pas lui on refuse de jouer le mouvement demandé !
     Pentago * game;
     quint16 lengthMessage;
@@ -31,7 +34,11 @@ public slots:
 
 private:
     void readFromSpecifiedSocket(QTcpSocket * thisSocket);
-    void processTheRequest(Message message);
+    void processTheRequest(Message message,QTcpSocket * socket);
     void sendResponseOfServer(const Message &message);
+    void sendResponseOfServer(const Message &message, QTcpSocket *socket);
+    void startPlay();
+    void sendBoardToClients();
+    void sendRequestRotate();
 };
 #endif // CLIENTTHREAD_H

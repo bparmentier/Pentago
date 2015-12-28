@@ -5,7 +5,7 @@
 #include <QtNetwork>
 #include "type.h"
 #include <string>
-
+#include "playercolor.h"
 class Message
 {
 private:
@@ -13,36 +13,39 @@ private:
 
     int row;
     int column;
-    QString color;
-
+    PlayerColor color;
     int miniBoard;
     QChar direction;
-
+    QVector<QVector<QChar>> board;
     bool winner;
-
     bool yourTurn;
 public:
     Message();
-    Message(TypeMessage type, int row, int colum, QString color,
-            int miniBoard, QChar direction, bool winner, bool yourTurn);
+    Message(TypeMessage type,PlayerColor color,int row, int colum,
+            int miniBoard, QChar direction, bool winner, bool yourTurn,QVector<QVector<QChar>> board);
+    Message(TypeMessage type,PlayerColor color);
+    Message(TypeMessage type,QVector<QVector<QChar>> board);
+    //Message(TypeMessage type,QList)
     TypeMessage getType() const;
     int getRow() const;
     int getColumn() const;
-    QString getColor() const;
-    int getBoard() const;
+    PlayerColor getColor() const;
+    int getMiniBoard() const;
+    QVector<QVector<QChar>> getBoard() const;
     QChar getDirection() const;
     bool getWinner() const;
     bool getTurn() const;
 };
 
-inline QDataStream &operator<<( QDataStream &flux, Message const& msg)
+inline QDataStream &operator<<( QDataStream &flux, const Message & msg)
 {
     flux << msg.getType();
+    flux << msg.getColor();
     flux << msg.getRow();
     flux << msg.getColumn();
-    flux << msg.getColor();
     flux << msg.getBoard();
     flux << msg.getDirection();
+    flux << msg.getBoard();
     flux << msg.getWinner();
     flux << msg.getTurn();
     return flux;
@@ -51,20 +54,22 @@ inline QDataStream &operator<<( QDataStream &flux, Message const& msg)
 inline void operator>>( QDataStream &flux, Message & msg)
 {
     TypeMessage type;
+    PlayerColor color;
     int row, colum, miniBoard;
-    QString color;
     QChar direction;
     bool winner, yourTurn;
+    QVector<QVector<QChar>> board;
 
     flux >> type;
+    flux >> color;
     flux >> row;
     flux >> colum;
-    flux >> color;
     flux >> miniBoard;
     flux >> direction;
+    flux >> board;
     flux >> winner;
     flux >> yourTurn;
-    msg = Message(type,row,colum,color,miniBoard,direction,winner,yourTurn);
+    msg = Message(type,color,row,colum,miniBoard,direction,winner,yourTurn,board);
 }
 
 #endif // MESSAGE_H
