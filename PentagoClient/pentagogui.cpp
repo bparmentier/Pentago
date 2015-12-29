@@ -28,7 +28,7 @@ PentagoGui::~PentagoGui()
     delete ui;
 }
 
-PentagoGui::play(int x, int y)
+void PentagoGui::play(int x, int y)
 {
     Message msg(TypeMessage::PLAY,PlayerColor::BLACK,x,y,0,' ',false,true,QVector<QVector<QChar>>());
     sendMessageToServer(msg);

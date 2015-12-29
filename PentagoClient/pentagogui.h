@@ -20,7 +20,7 @@ class PentagoGui : public QMainWindow
 public:
     explicit PentagoGui(QWidget *parent = 0);
     ~PentagoGui();
-    play(int x,int y);
+    void play(int x,int y);
 
 private:
     Ui::PentagoGui * ui;
