@@ -78,8 +78,8 @@ void ThreadManager::readFromSpecifiedSocket(QTcpSocket * thisSocket)
     lengthMessage = 0;
 }
 void ThreadManager::startPlay(){
-    Message msg(TypeMessage::PLAY_STATE,PlayerColor::BLACK,0,0,0,' ',false,true,QVector<QVector<QChar>>());
-    Message msg2(TypeMessage::PLAY_STATE,PlayerColor::BLACK,0,0,0,' ',false,false,QVector<QVector<QChar>>());
+    Message msg(TypeMessage::PLAY_STATE,PlayerColor::BLACK,0,0,0,' ',false,true,QVector<QVector<PlayerColor>>());
+    Message msg2(TypeMessage::PLAY_STATE,PlayerColor::BLACK,0,0,0,' ',false,false,QVector<QVector<PlayerColor>>());
     sendResponseOfServer(msg,firstClientSocket);
     sendResponseOfServer(msg2,secondClientSocket);
 }
@@ -161,7 +161,10 @@ void ThreadManager::sendResponseOfServer(const Message & message,QTcpSocket *soc
 
 }
 void ThreadManager::sendBoardToClients(){
-    Message msg(TypeMessage::BOARD_STATE,QVector<QVector<QChar>>());
+
+    std::vector<std::vector<Hole>> tmp {game->getBoard()};
+    QVector<QVector<PlayerColor>> vec = Message::convertBoard(tmp);
+    Message msg(TypeMessage::BOARD_STATE,PlayerColor::NONE,0,0,0,' ',false,true,vec);
     sendResponseOfServer(msg);
 
 }

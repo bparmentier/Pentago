@@ -16,12 +16,15 @@ class QBoard : public QGraphicsScene
 private:
     static const int BOARD_WIDTH = 6;
     QBallColor color;
+    QBallColor otherColor;
     int x;
     int y;
     std::array<std::array<QGraphicsEllipseItem *, BOARD_WIDTH>, BOARD_WIDTH> holes;
     PentagoGui * pentagoGui;
     void drawMiniBoard(qreal x, qreal y);
+    void drawMiniBoard(qreal x, qreal y, QVector<QVector<PlayerColor> > board);
     void drawHoles();
+
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
@@ -31,6 +34,7 @@ public:
     void setColor(QBallColor aColor);
     int getX();
     int getY();
+    void updateBoard(QVector<QVector<PlayerColor> > board);
 };
 
 #endif // QBOARD_H

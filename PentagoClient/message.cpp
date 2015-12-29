@@ -5,7 +5,7 @@ Message::Message(){
 }
 
 Message::Message(TypeMessage type, PlayerColor color, int row, int column,
-        int miniBoard, QChar direction, bool winner, bool yourTurn, QVector<QVector<QChar>> board){
+        int miniBoard, QChar direction, bool winner, bool yourTurn, QVector<QVector<PlayerColor>> board){
     this->type = type;
     this->row = row;
     this->column = column;
@@ -20,7 +20,7 @@ Message::Message(TypeMessage type,PlayerColor color):
     type{type},color{color}
 {
 }
-Message::Message(TypeMessage type,QVector<QVector<QChar>> board):
+Message::Message(TypeMessage type, QVector<QVector<PlayerColor>> board):
     type{type},board{board}
 {
 }
@@ -43,7 +43,7 @@ PlayerColor Message::getColor() const{
 int Message::getMiniBoard() const{
     return miniBoard;
 }
-QVector<QVector<QChar>> Message::getBoard()const{
+QVector<QVector<PlayerColor>> Message::getBoard()const{
     return board;
 }
 

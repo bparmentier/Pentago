@@ -30,7 +30,7 @@ PentagoGui::~PentagoGui()
 
 PentagoGui::play(int x, int y)
 {
-    Message msg(TypeMessage::PLAY,PlayerColor::BLACK,x,y,0,' ',false,true,QVector<QVector<QChar>>());
+    Message msg(TypeMessage::PLAY,PlayerColor::BLACK,x,y,0,' ',false,true,QVector<QVector<PlayerColor>>());
     sendMessageToServer(msg);
 }
 
@@ -80,7 +80,10 @@ void PentagoGui::processTheMessage(Message messageFromServer)
     }
     case TypeMessage::BOARD_STATE:
     {
-        qDebug()<<"Board state received";
+
+        QVector<QVector<PlayerColor>> vec = messageFromServer.getBoard();
+
+        board->updateBoard(vec);
         break;
     }
     }
