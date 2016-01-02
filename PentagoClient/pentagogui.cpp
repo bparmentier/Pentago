@@ -33,9 +33,13 @@ void PentagoGui::play(int x, int y)
     Message msg(TypeMessage::PLAY);
     msg.setLine(x);
     msg.setColumn(y);
-    /*Message msg(TypeMessage::PLAY, playerColor, x, y,
-                0, ' ', false, true, QVector<QVector<PlayerColor>>());*/
     sendMessageToServer(msg);
+}
+
+void PentagoGui::rotate(int miniboard, bool clockwise)
+{
+    qDebug() << miniboard;
+    qDebug() << clockwise;
 }
 
 void PentagoGui::onPlayRequest()
@@ -72,14 +76,12 @@ void PentagoGui::processTheMessage(Message messageFromServer)
         } else {
             board->setColor(QBallColor::WHITE);
         }
-        //sendBeginStateToServer(playerColor);
         break;
     case TypeMessage::PLAYER_TURN:
         break;
     case TypeMessage::BOARD_UPDATE:
     {
         QVector<QVector<PlayerColor>> vec = messageFromServer.getBoard();
-
         board->updateBoard(vec);
     }
         break;

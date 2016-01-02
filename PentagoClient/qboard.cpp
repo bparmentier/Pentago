@@ -121,6 +121,56 @@ void QBoard::updateBoard(QVector<QVector<PlayerColor> > board)
     drawMiniBoard(BOTTOM_RIGHT, 160, 160, miniBR);
 }
 
+void QBoard::readyrotate()
+{
+    for(auto e:arrows) {
+        removeItem(e);
+        delete e;
+    }
+    RotationArrow * mini1CW = new RotationArrow(1,Direction::CLOCKWISE);
+    RotationArrow * mini1CCW = new RotationArrow(1,Direction::COUNTERCLOCKWISE);
+
+    RotationArrow * mini0CW = new RotationArrow(0,Direction::CLOCKWISE);
+    RotationArrow * mini0CCW = new RotationArrow(0,Direction::COUNTERCLOCKWISE);
+
+    RotationArrow * mini2CW = new RotationArrow(2,Direction::CLOCKWISE);
+    RotationArrow * mini2CCW = new RotationArrow(2,Direction::COUNTERCLOCKWISE);
+
+    RotationArrow * mini3CW = new RotationArrow(3,Direction::CLOCKWISE);
+    RotationArrow * mini3CCW = new RotationArrow(3,Direction::COUNTERCLOCKWISE);
+
+    mini1CW->setPos(340,0);
+    mini1CW->setRotation(90);
+    mini1CCW->setPos(280,-30);
+
+    mini0CW->setPos(0,-30);
+    mini0CCW->setPos(-30,30);
+    mini0CCW->setRotation(-90);
+
+    mini2CW->setPos(-30,310);
+    mini2CW->setRotation(-90);
+    mini2CCW->setPos(30,340);
+    mini2CCW->setRotation(180);
+
+    mini3CW->setPos(310,340);
+    mini3CW->setRotation(180);
+    mini3CCW->setPos(340,280);
+    mini3CCW->setRotation(90);
+
+    arrows.push_back(mini1CW);
+    arrows.push_back(mini1CCW);
+    arrows.push_back(mini0CW);
+    arrows.push_back(mini0CCW);
+    arrows.push_back(mini2CW);
+    arrows.push_back(mini2CCW);
+    arrows.push_back(mini3CW);
+    arrows.push_back(mini3CCW);
+
+    for(auto e:arrows) addItem(e);
+
+
+}
+
 void QBoard::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     QGraphicsScene::mousePressEvent(event);
@@ -135,6 +185,12 @@ void QBoard::mousePressEvent(QGraphicsSceneMouseEvent *event)
             qDebug() << "(" <<x<<","<<y<<")";
             pentagoGui->play(x,y);
             break;
+        }else if(item->type() == RotationArrow::Type){
+            RotationArrow * temp = dynamic_cast<RotationArrow *>(item);
+            if(temp){
+                bool clockwise = temp->getDirection() == Direction::CLOCKWISE ? true : false;
+                pentagoGui->rotate(temp->getMiniBoard(),clockwise);
+            }
         }
     }
 }

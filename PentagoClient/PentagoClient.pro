@@ -20,7 +20,8 @@ SOURCES += main.cpp\
     o_sdo/sujetdobservation.cpp \
     qboard.cpp \
     qhole.cpp \
-    qball.cpp
+    qball.cpp \
+    rotationarrow.cpp
 
 HEADERS  += pentagogui.h \
     message.h \
@@ -31,6 +32,11 @@ HEADERS  += pentagogui.h \
     qhole.h \
     qball.h \
     qballcolor.h \
-    playercolor.h
+    playercolor.h \
+    rotationarrow.h \
+    direction.h
 
 FORMS    += pentagogui.ui
+
+RESOURCES += \
+    ressources.qrc

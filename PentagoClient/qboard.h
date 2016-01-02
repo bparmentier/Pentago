@@ -7,7 +7,7 @@
 #include <QGraphicsSceneMouseEvent>
 #include "qballcolor.h"
 #include "pentagogui.h"
-
+#include "rotationarrow.h"
 class PentagoGui;
 class QBoard : public QGraphicsScene
 {
@@ -20,7 +20,7 @@ private:
     enum MiniBoardPosition {
         TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT
     };
-
+    std::vector<RotationArrow *> arrows;
     QBallColor color;
     //QBallColor otherColor;
     std::array<std::array<QGraphicsEllipseItem *, BOARD_WIDTH>, BOARD_WIDTH> holes;
@@ -35,6 +35,7 @@ public:
     QBoard(QWidget *parent = 0);
     void setColor(QBallColor color);
     void updateBoard(QVector<QVector<PlayerColor> > board);
+    void readyrotate();
 };
 
 #endif // QBOARD_H

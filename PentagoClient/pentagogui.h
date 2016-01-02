@@ -21,6 +21,7 @@ public:
     explicit PentagoGui(QWidget *parent = 0);
     ~PentagoGui();
     void play(int x,int y);
+    void rotate(int miniboard,bool clockwise);
 
 private:
     Ui::PentagoGui * ui;
