@@ -23,23 +23,17 @@ private:
 
     QBallColor color;
     QBallColor otherColor;
-    int x;
-    int y;
     std::array<std::array<QGraphicsEllipseItem *, BOARD_WIDTH>, BOARD_WIDTH> holes;
     PentagoGui * pentagoGui;
     void drawMiniBoard(MiniBoardPosition miniBoardPosition, qreal x, qreal y);
     void drawMiniBoard(MiniBoardPosition miniBoardPosition, qreal x, qreal y, QVector<QVector<PlayerColor> > board);
-    void drawHoles();
-
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
-    void test(int x,int y);
+
 public:
     QBoard(QWidget *parent = 0);
     void setColor(QBallColor aColor);
-    int getX();
-    int getY();
     void updateBoard(QVector<QVector<PlayerColor> > board);
 };
 

@@ -7,7 +7,6 @@ QBoard::QBoard(QWidget *parent) :
     QGraphicsScene{parent}
 {
     pentagoGui = dynamic_cast<PentagoGui*>(parent);
-    x,y=0;
     drawMiniBoard(TOP_LEFT, 0, 0);
     drawMiniBoard(TOP_RIGHT, 0, 160);
     drawMiniBoard(BOTTOM_LEFT, 160, 0);
@@ -143,16 +142,6 @@ void QBoard::setColor(QBallColor aColor){
     color = aColor;
     if (color == QBallColor::BLACK) otherColor = QBallColor::WHITE;
     else otherColor = QBallColor::BLACK;
-}
-
-int QBoard::getX()
-{
-    return x;
-}
-
-int QBoard::getY()
-{
-    return y;
 }
 
 
