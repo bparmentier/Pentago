@@ -5,13 +5,13 @@
 using namespace std;
 
 Pentago::Pentago(vector<Player> & players):gameManager(players), board(),
-    finished(false), nextAction(ActionGame::PLAY)
+    nextAction(ActionGame::PLAY), winner(BallColor::NONE)
 {
 }
 
 void Pentago::play(int x, int y, QTcpSocket * player)
 {
-    if(finished == true){
+    if(isFinished()){
         throw PentagoException("La partie est terminée !");
     }
     if(player!=this->gameManager.getCurrentPlayer()->getPlayerIdentifier()){
@@ -21,14 +21,16 @@ void Pentago::play(int x, int y, QTcpSocket * player)
         throw PentagoException("il faut d'abord effectuer la rotation d'un mini-plateau !");
     }
     this->board.placeBall(x,y,gameManager.getCurrentPlayer());
-    finished = board.checkSequencePentago(x,y);
+    if(board.checkSequencePentago(x,y)){
+        winner = this->gameManager.getCurrentPlayer()->getBallColor();
+    }
     nextAction = ActionGame::ROTATE;
 }
 
 void Pentago::rotate(int miniBoard, Direction direction, QTcpSocket * player)
 {
-    if(finished == true){
-        throw string("la partie est terminé !");
+    if(isFinished()){
+        throw PentagoException("la partie est terminé !");
     }
     if(player!=this->gameManager.getCurrentPlayer()->getPlayerIdentifier()){
         throw PentagoException("c'est à votre adversaire de jouer !");
@@ -40,33 +42,39 @@ void Pentago::rotate(int miniBoard, Direction direction, QTcpSocket * player)
         throw PentagoException("le mini-plateau choisit est incorrecte !");
     }
     board.rotateMiniBoard(miniBoard, direction);
-    finished = board.checkSequencePentagoAfterRotate(miniBoard);
-    if(!finished){
-        gameManager.nextPlayer();
+    switch(board.checkSequencePentagoAfterRotate(miniBoard)){
+    case BallColor::BLACK:
+        winner=BallColor::BLACK;
+        break;
+    case BallColor::WHITE:
+        winner=BallColor::WHITE;
+        break;
     }
+    gameManager.nextPlayer();
     nextAction = ActionGame::PLAY;
 }
 
 bool Pentago::isFinished() const
 {
-    return finished || board.lastPlay();
+    return winner!=BallColor::NONE || (board.lastPlay() && nextAction==ActionGame::PLAY);
 }
 
 bool Pentago::resultatEgalite() const{
-    return board.lastPlay();
+    return winner==BallColor::NONE;
 }
 
 string Pentago::getWinnerName() {
-    if(!finished){
-        throw string("error, la partie n'est pas terminé");
+    if(!isFinished()){
+        throw PentagoException("error, la partie n'est pas terminé");
     }
-    return gameManager.getCurrentPlayer()->getName();
+    return gameManager.getNamePlayerByColor(winner);
 }
 
 string Pentago::getCurrentPlayerName()
 {
     return gameManager.getCurrentPlayer()->getName();
 }
+
 BallColor Pentago::getCurrentPLayerBallColor(){
     return gameManager.getCurrentPlayer()->getBallColor();
 }

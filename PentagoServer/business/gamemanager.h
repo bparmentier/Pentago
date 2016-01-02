@@ -28,6 +28,13 @@ public:
      * \brief permet de passer au joueur suivant de la partie
      */
     void nextPlayer();
+
+    /*!
+     * \brief permet d'obtenir le nom du joueur à la couleur
+     * \param color couleur du joueur qu'on désire
+     * \return le nom du joueur
+     */
+    std::string getNamePlayerByColor(BallColor color);
 };
 
 #endif // GAMEMANAGER_H

@@ -55,30 +55,23 @@ bool Board::checkSequencePentago(int x, int y)
     return fiveSequence;
 }
 
-bool Board::checkSequencePentagoAfterRotate(int numMiniBoard)
+BallColor Board::checkSequencePentagoAfterRotate(int numMiniBoard)
 {
     int posMiniBoardX = numMiniBoard==1 || numMiniBoard==2 ? 0 : 3;
     int posMiniBoardY = numMiniBoard==1 || numMiniBoard==3 ? 0 : 3;
     bool fiveSequence = false;
-    bool blanche = false;
-    bool noir = false;
-    for(int i = posMiniBoardX; i<posMiniBoardX+3 && (!blanche || !noir); i++){
-        for(int j = posMiniBoardY; j<posMiniBoardY+3 && (!blanche || !noir); j++){
+    for(int i = posMiniBoardX; i<posMiniBoardX+3; i++){
+        for(int j = posMiniBoardY; j<posMiniBoardY+3; j++){
             if(board[i][j].getBall().getColor() == BallColor::WHITE
                     || board[i][j].getBall().getColor() == BallColor::BLACK){
-                fiveSequence = pentagoVertical(i,j) || pentagoHorizontal(i,j)
-                        || pentagoRightDiagonal(i,j) || pentagoLeftDiagonal(i,j);
+                fiveSequence = checkSequencePentago(i,j);
                 if(fiveSequence){
-                    if(board[i][j].getBall().getColor() == BallColor::WHITE){
-                        blanche = true;
-                    }else{
-                        noir = true;
-                    }
+                    return board[i][j].getBall().getColor();
                 }
             }
         }
     }
-    return fiveSequence;
+    return BallColor::NONE;
 }
 
 bool Board::lastPlay()const
