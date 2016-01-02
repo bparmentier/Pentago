@@ -3,6 +3,7 @@
 
 #include "ballcolor.h"
 #include <string>
+#include <QTcpSocket>
 
 class Player
 {
@@ -10,6 +11,7 @@ class Player
 private:
     std::string name;
     BallColor ballColor;
+    QTcpSocket * playerIdentifier;
 
 public:
 
@@ -18,7 +20,7 @@ public:
      * \param name nom du joueur
      * \param color couleur des billes du joueur
      */
-    Player(std::string name, BallColor color);
+    Player(std::string name, BallColor color, QTcpSocket * playerIdentifier);
 
     /*!
      * \brief permet d'obtenir le nom du joueur
@@ -31,6 +33,12 @@ public:
      * \return la couleur des billes du joueur
      */
     BallColor getBallColor() const;
+
+    /*!
+     * \brief permet d'obtenir l'identifiant du joueur
+     * \return l'identifiant du joueur
+     */
+    QTcpSocket * getPlayerIdentifier() const;
 
 };
 

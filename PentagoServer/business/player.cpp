@@ -2,7 +2,8 @@
 
 using namespace std;
 
-Player::Player(string name, BallColor color):name(name), ballColor(color)
+Player::Player(string name, BallColor color, QTcpSocket * playerIdentifier):name(name), ballColor(color),
+    playerIdentifier(playerIdentifier)
 {
 }
 
@@ -14,4 +15,9 @@ string Player::getName() const
 BallColor Player::getBallColor() const
 {
     return ballColor;
+}
+
+QTcpSocket *Player::getPlayerIdentifier() const
+{
+    return playerIdentifier;
 }

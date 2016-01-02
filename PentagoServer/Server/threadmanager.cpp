@@ -9,9 +9,6 @@ ThreadManager::ThreadManager(qintptr ID, qintptr ID2, QObject *parent) :
 {
     qDebug() << "new thread created";
     vector<Player> players;
-    players.push_back(Player("player1",BallColor::BLACK));
-    players.push_back(Player("player2",BallColor::WHITE));
-    game = new Pentago(players);
     /* First client */
     firstClientSocket = new QTcpSocket();
     if(!firstClientSocket->setSocketDescriptor(ID))
@@ -35,6 +32,10 @@ ThreadManager::ThreadManager(qintptr ID, qintptr ID2, QObject *parent) :
 
     this->nextSocketPlayer = firstClientSocket;
     this->lengthMessage = 0;
+
+    players.push_back(Player("player1",BallColor::BLACK, this->firstClientSocket));
+    players.push_back(Player("player2",BallColor::WHITE,this->secondClientSocket));
+    game = new Pentago(players);
 
     //Envoyer aux joueurs les parametres de la partie
     Message msg1(TypeMessage::BEGIN_STATE,PlayerColor::WHITE);
@@ -101,7 +102,7 @@ void ThreadManager::processTheRequest(Message message,QTcpSocket * socket)
         }
         break;
     case TypeMessage::PLAY:
-        game->play(message.getRow(),message.getColumn());
+        game->play(message.getRow(),message.getColumn(),socket);
         qDebug()<<"Played";
         sendBoardToClients();
         sendRequestRotate();

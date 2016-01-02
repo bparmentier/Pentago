@@ -5,23 +5,36 @@
 using namespace std;
 
 Pentago::Pentago(vector<Player> & players):gameManager(players), board(),
-    finished(false)
+    finished(false), nextAction(ActionGame::PLAY)
 {
 }
 
-void Pentago::play(int x, int y)
+void Pentago::play(int x, int y, QTcpSocket * player)
 {
     if(finished == true){
         throw PentagoException("La partie est terminée !");
     }
+    if(player!=this->gameManager.getCurrentPlayer()->getPlayerIdentifier()){
+        throw PentagoException("c'est à votre adversaire de jouer !");
+    }
+    if(nextAction!=ActionGame::PLAY){
+        throw PentagoException("il faut d'abord effectuer la rotation d'un mini-plateau !");
+    }
     this->board.placeBall(x,y,gameManager.getCurrentPlayer());
     finished = board.checkSequencePentago(x,y);
+    nextAction = ActionGame::ROTATE;
 }
 
-void Pentago::rotate(int miniBoard, Direction direction)
+void Pentago::rotate(int miniBoard, Direction direction, QTcpSocket * player)
 {
     if(finished == true){
         throw string("la partie est terminé !");
+    }
+    if(player!=this->gameManager.getCurrentPlayer()->getPlayerIdentifier()){
+        throw PentagoException("c'est à votre adversaire de jouer !");
+    }
+    if(nextAction!=ActionGame::ROTATE){
+        throw PentagoException("il faut d'abord placer une bille sur le plateau !");
     }
     if(miniBoard < 1 || miniBoard > 4){
         throw PentagoException("le mini-plateau choisit est incorrecte !");
@@ -31,6 +44,7 @@ void Pentago::rotate(int miniBoard, Direction direction)
     if(!finished){
         gameManager.nextPlayer();
     }
+    nextAction = ActionGame::PLAY;
 }
 
 bool Pentago::isFinished() const

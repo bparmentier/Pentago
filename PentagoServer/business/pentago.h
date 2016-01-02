@@ -3,6 +3,7 @@
 
 #include "gamemanager.h"
 #include "board.h"
+#include "actiongame.h"
 #include <vector>
 
 class Pentago
@@ -12,6 +13,7 @@ public:
     GameManager gameManager;
     Board board;
     bool finished;
+    ActionGame nextAction;
 
 public:
 
@@ -27,7 +29,7 @@ public:
      * \param y la colonne choisie
      * \throw PentagoException si la partie est terminé
      */
-    void play(int x, int y);
+    void play(int x, int y, QTcpSocket *player);
 
     /*!
      * \brief permet d'éffectuer la rotation d'un mini-plateau
@@ -36,7 +38,7 @@ public:
      * \throw PentagoException si la partie est terminé ou que le
      * numéro du mini-plateau est invalide
      */
-    void rotate(int miniBoard, Direction direction);
+    void rotate(int miniBoard, Direction direction, QTcpSocket * player);
 
     /*!
      * \brief permet de savoir si une partie est fini
