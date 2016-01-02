@@ -19,6 +19,14 @@ void Message::setPlayerColor(PlayerColor color)
     this->playerColor = color;
 }
 
+void Message::setGameAction(GameAction action)
+{
+    if (type != TypeMessage::PLAYER_TURN) {
+        throw std::logic_error("The message does not support this parameter");
+    }
+    this->gameAction = action;
+}
+
 void Message::setBoard(QVector<QVector<PlayerColor>> board)
 {
     if (type != TypeMessage::BOARD_UPDATE) {
@@ -80,6 +88,14 @@ PlayerColor Message::getPlayerColor() const
         throw std::logic_error("The message does not have this attribute");
     }
     return playerColor;
+}
+
+Message::GameAction Message::getGameAction() const
+{
+    if (type != TypeMessage::PLAYER_TURN) {
+        throw std::logic_error("The message does not have this attribute");
+    }
+    return gameAction;
 }
 
 QVector<QVector<PlayerColor>> Message::getBoard() const

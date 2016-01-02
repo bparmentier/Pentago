@@ -11,20 +11,16 @@
 
 class Message
 {
-private:
-    TypeMessage type;
-    PlayerColor playerColor;
-    QVector<QVector<PlayerColor>> board;
-    int line;
-    int column;
-    int miniBoardIndice;
-    bool clockwise;
-    QString error;
-
 public:
+    enum class GameAction {
+        PLACE_BALL,
+        ROTATE
+    };
+
     Message();
     Message(TypeMessage type);
     void setPlayerColor(PlayerColor color);
+    void setGameAction(GameAction action);
     void setBoard(QVector<QVector<PlayerColor>> board);
     void setLine(int line);
     void setColumn(int column);
@@ -34,6 +30,7 @@ public:
 
     TypeMessage getType() const;
     PlayerColor getPlayerColor() const;
+    GameAction getGameAction() const;
     QVector<QVector<PlayerColor>> getBoard() const;
     int getLine() const;
     int getColumn() const;
@@ -42,7 +39,46 @@ public:
     QString getError() const;
 
     static QVector<QVector<PlayerColor>> convertBoard(std::vector<std::vector<Hole>> &vec);
+
+private:
+    TypeMessage type;
+    PlayerColor playerColor;
+    GameAction gameAction;
+    QVector<QVector<PlayerColor>> board;
+    int line;
+    int column;
+    int miniBoardIndice;
+    bool clockwise;
+    QString error;
 };
+
+inline QDataStream &operator<<( QDataStream &flux, const Message::GameAction &action)
+{
+    switch (action) {
+    case Message::GameAction::PLACE_BALL:
+        flux << 0;
+        break;
+    case Message::GameAction::ROTATE:
+        flux << 1;
+        break;
+    }
+
+    return flux;
+}
+
+inline void operator>>( QDataStream &flux, Message::GameAction &action)
+{
+    int actionId;
+    flux >> actionId;
+    switch (actionId) {
+    case 0:
+        action = Message::GameAction::PLACE_BALL;
+        break;
+    case 1:
+        action = Message::GameAction::ROTATE;
+        break;
+    }
+}
 
 inline QDataStream &operator<<( QDataStream &flux, const Message &message)
 {
@@ -53,6 +89,7 @@ inline QDataStream &operator<<( QDataStream &flux, const Message &message)
         break;
     case TypeMessage::PLAYER_TURN:
         flux << message.getPlayerColor();
+        flux << message.getGameAction();
         break;
     case TypeMessage::BOARD_UPDATE:
         flux << message.getBoard();
@@ -84,18 +121,29 @@ inline void operator>>( QDataStream &flux, Message & msg)
     msg = Message(type);
     switch (type) {
     case TypeMessage::READY:
-    case TypeMessage::PLAYER_TURN:
     case TypeMessage::FINISHED:
-        PlayerColor color;
-        flux >> color;
-        msg.setPlayerColor(color);
+        {
+            PlayerColor color;
+            flux >> color;
+            msg.setPlayerColor(color);
+        }
+        break;
+    case TypeMessage::PLAYER_TURN:
+        {
+            PlayerColor color;
+            Message::GameAction action;
+            flux >> color;
+            flux >> action;
+            msg.setPlayerColor(color);
+            msg.setGameAction(action);
+        }
         break;
     case TypeMessage::BOARD_UPDATE:
-    {
-        QVector<QVector<PlayerColor>> board;
-        flux >> board;
-        msg.setBoard(board);
-    }
+        {
+            QVector<QVector<PlayerColor>> board;
+            flux >> board;
+            msg.setBoard(board);
+        }
         break;
     case TypeMessage::PLAY:
         int line, column;
@@ -118,6 +166,5 @@ inline void operator>>( QDataStream &flux, Message & msg)
         break;
     }
 }
-
 
 #endif // MESSAGE_H
