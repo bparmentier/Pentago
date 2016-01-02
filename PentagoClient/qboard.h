@@ -22,7 +22,6 @@ private:
     };
     std::vector<RotationArrow *> arrows;
     QBallColor color;
-    //QBallColor otherColor;
     std::array<std::array<QGraphicsEllipseItem *, BOARD_WIDTH>, BOARD_WIDTH> holes;
     PentagoGui * pentagoGui;
     void drawMiniBoard(MiniBoardPosition miniBoardPosition, qreal x, qreal y);

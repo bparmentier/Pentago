@@ -40,6 +40,10 @@ void PentagoGui::rotate(int miniboard, bool clockwise)
 {
     qDebug() << miniboard;
     qDebug() << clockwise;
+    Message msg(TypeMessage::ROTATE);
+    msg.setClockwiseRotation(clockwise);
+    msg.setMiniBoardIndice(miniboard);
+    sendMessageToServer(msg);
 }
 
 void PentagoGui::onPlayRequest()
