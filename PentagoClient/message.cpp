@@ -43,6 +43,14 @@ void Message::setColumn(int column)
     this->column = column;
 }
 
+void Message::setMiniBoardIndice(int indice)
+{
+    if (type != TypeMessage::ROTATE) {
+        throw std::logic_error("The message does not support this parameter");
+    }
+    this->miniBoardIndice = indice;
+}
+
 void Message::setClockwiseRotation(bool clockwise)
 {
     if (type != TypeMessage::ROTATE) {
@@ -96,6 +104,14 @@ int Message::getColumn() const
         throw std::logic_error("The message does not have this attribute");
     }
     return column;
+}
+
+int Message::getMiniBoardIndice() const
+{
+    if (type != TypeMessage::ROTATE) {
+        throw std::logic_error("The message does not have this attribute");
+    }
+    return miniBoardIndice;
 }
 
 bool Message::isClockwiseRotation() const

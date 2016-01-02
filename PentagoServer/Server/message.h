@@ -17,6 +17,7 @@ private:
     QVector<QVector<PlayerColor>> board;
     int line;
     int column;
+    int miniBoardIndice;
     bool clockwise;
     QString error;
 
@@ -27,6 +28,7 @@ public:
     void setBoard(QVector<QVector<PlayerColor>> board);
     void setLine(int line);
     void setColumn(int column);
+    void setMiniBoardIndice(int indice);
     void setClockwiseRotation(bool clockwise);
     void setError(QString error);
 
@@ -35,6 +37,7 @@ public:
     QVector<QVector<PlayerColor>> getBoard() const;
     int getLine() const;
     int getColumn() const;
+    int getMiniBoardIndice() const;
     bool isClockwiseRotation() const;
     QString getError() const;
 
@@ -59,6 +62,7 @@ inline QDataStream &operator<<( QDataStream &flux, const Message &message)
         flux << message.getColumn();
         break;
     case TypeMessage::ROTATE:
+        flux << message.getMiniBoardIndice();
         flux << message.isClockwiseRotation();
         break;
     case TypeMessage::FINISHED:
@@ -100,8 +104,11 @@ inline void operator>>( QDataStream &flux, Message & msg)
         msg.setColumn(column);
         break;
     case TypeMessage::ROTATE:
+        int miniBoardIndice;
         bool isClockwiseRotation;
+        flux >> miniBoardIndice;
         flux >> isClockwiseRotation;
+        msg.setMiniBoardIndice(miniBoardIndice);
         msg.setClockwiseRotation(isClockwiseRotation);
         break;
     case TypeMessage::ERROR:
