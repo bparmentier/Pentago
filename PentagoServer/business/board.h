@@ -11,7 +11,7 @@ class Board
 
 private:
     std::vector<std::vector<Hole>> board;
-    int nombreCoup;
+    int playNumber;
 
 public:
     /*!
@@ -72,27 +72,27 @@ public:
      * \param y la colonne où la bille s'est jouée
      * \return true si il y'a un pentago false si non
      */
-    bool verifierSuitePion(int x, int y);
+    bool checkSequencePentago(int x, int y);
 
     /*!
      * \brief permet de vérifier si il y'a un pentago aprés la rotation d'un mini-plateau
      * \param numMiniPlateau numéro du plateau touché par la rotation
      * \return true si il y'a un pentago false si non
      */
-    bool verifierSuitePionApresTour(int numMiniPlateau);
+    bool checkSequencePentagoAfterRotate(int numMiniPlateau);
 
     /*!
      * \brief permet de savoir si c'est le dernier coup possible sur le plateau
      * \return true si c'est le dernier false si non
      */
-    bool dernierCoup() const;
+    bool lastPlay() const;
 
 private:
     void rotate(int startColumn, int startLine, Direction direction);
-    bool pentagoVerticale(int x, int y);
+    bool pentagoVertical(int x, int y);
     bool pentagoHorizontal(int x, int y);
-    bool pentagoDiagonaleDroite(int x, int y);
-    bool pentagoDiagonaleGauche(int x, int y);
+    bool pentagoRightDiagonal(int x, int y);
+    bool pentagoLeftDiagonal(int x, int y);
 };
 
 #endif // BOARD_H

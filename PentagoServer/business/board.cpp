@@ -3,7 +3,7 @@
 
 using namespace std;
 
-Board::Board():board(6, vector<Hole>(6,Hole())), nombreCoup(0)
+Board::Board():board(6, vector<Hole>(6,Hole())), playNumber(0)
 {
 }
 
@@ -18,7 +18,7 @@ void Board::placeBall(int x, int y, Player * player)
     }
     board[x][y].setBall(Ball(player->getBallColor()));
     board[x][y].setPlayer(player);
-    nombreCoup++;
+    playNumber++;
 }
 
 void Board::rotateMiniBoard(int miniBoardNum, Direction direction)
@@ -48,27 +48,27 @@ bool Board::isHoleOccupied(int x, int y) const
     return board[x][y].isOccupied();
 }
 
-bool Board::verifierSuitePion(int x, int y)
+bool Board::checkSequencePentago(int x, int y)
 {
-    bool suiteCinq = pentagoVerticale(x,y) || pentagoHorizontal(x,y)
-            || pentagoDiagonaleDroite(x,y) || pentagoDiagonaleGauche(x,y);
-    return suiteCinq;
+    bool fiveSequence = pentagoVertical(x,y) || pentagoHorizontal(x,y)
+            || pentagoRightDiagonal(x,y) || pentagoLeftDiagonal(x,y);
+    return fiveSequence;
 }
 
-bool Board::verifierSuitePionApresTour(int numMiniPlateau)
+bool Board::checkSequencePentagoAfterRotate(int numMiniBoard)
 {
-    int posMiniPlaX = numMiniPlateau==1 || numMiniPlateau==2 ? 0 : 3;
-    int posMiniPlaY = numMiniPlateau==1 || numMiniPlateau==3 ? 0 : 3;
-    bool suiteCinq = false;
+    int posMiniBoardX = numMiniBoard==1 || numMiniBoard==2 ? 0 : 3;
+    int posMiniBoardY = numMiniBoard==1 || numMiniBoard==3 ? 0 : 3;
+    bool fiveSequence = false;
     bool blanche = false;
     bool noir = false;
-    for(int i = posMiniPlaX; i<posMiniPlaX+3 && (!blanche || !noir); i++){
-        for(int j = posMiniPlaY; j<posMiniPlaY+3 && (!blanche || !noir); j++){
+    for(int i = posMiniBoardX; i<posMiniBoardX+3 && (!blanche || !noir); i++){
+        for(int j = posMiniBoardY; j<posMiniBoardY+3 && (!blanche || !noir); j++){
             if(board[i][j].getBall().getColor() == BallColor::WHITE
                     || board[i][j].getBall().getColor() == BallColor::BLACK){
-                suiteCinq = pentagoVerticale(i,j) || pentagoHorizontal(i,j)
-                        || pentagoDiagonaleDroite(i,j) || pentagoDiagonaleGauche(i,j);
-                if(suiteCinq){
+                fiveSequence = pentagoVertical(i,j) || pentagoHorizontal(i,j)
+                        || pentagoRightDiagonal(i,j) || pentagoLeftDiagonal(i,j);
+                if(fiveSequence){
                     if(board[i][j].getBall().getColor() == BallColor::WHITE){
                         blanche = true;
                     }else{
@@ -78,12 +78,12 @@ bool Board::verifierSuitePionApresTour(int numMiniPlateau)
             }
         }
     }
-    return suiteCinq;
+    return fiveSequence;
 }
 
-bool Board::dernierCoup()const
+bool Board::lastPlay()const
 {
-    return nombreCoup == (board.size()* board.size());
+    return playNumber == (board.size()* board.size());
 }
 
 void Board::rotate(int startColumn, int startLine, Direction direction){
@@ -104,84 +104,84 @@ void Board::rotate(int startColumn, int startLine, Direction direction){
     }
 }
 
-bool Board::pentagoVerticale(int x, int y){
-    int nbMemeBille = 1;
+bool Board::pentagoVertical(int x, int y){
+    int nbSaleBall = 1;
     int i = x+1;
-    while(i < board.size() && nbMemeBille < 5
+    while(i < board.size() && nbSaleBall < 5
           && board[i][y] == board[x][y] ){
-        nbMemeBille++;
+        nbSaleBall++;
         i++;
     }
-    if(nbMemeBille<5){
+    if(nbSaleBall<5){
         i = x-1;
-        while(i >= 0 && nbMemeBille < 5
+        while(i >= 0 && nbSaleBall < 5
               && board[i][y] == board[x][y] ){
-            nbMemeBille++;
+            nbSaleBall++;
             i--;
         }
     }
-    return nbMemeBille == 5;
+    return nbSaleBall == 5;
 }
 
 bool Board::pentagoHorizontal(int x, int y){
-    int nbMemeBille = 1;
+    int nbSameBall = 1;
     int i = y+1;
-    while(i < board[x].size() && nbMemeBille < 5
+    while(i < board[x].size() && nbSameBall < 5
           && board[x][i] == board[x][y]){
-        nbMemeBille++;
+        nbSameBall++;
         i++;
     }
-    if(nbMemeBille<5){
+    if(nbSameBall<5){
         i = y-1;
-        while(i >= 0 && nbMemeBille < 5
+        while(i >= 0 && nbSameBall < 5
               && board[x][i] == board[x][y]){
-            nbMemeBille++;
+            nbSameBall++;
             i--;
         }
     }
-    return nbMemeBille == 5;
+    return nbSameBall == 5;
 }
 
-bool Board::pentagoDiagonaleDroite(int x, int y){
-    int nbMemeBille = 1;
+bool Board::pentagoRightDiagonal(int x, int y){
+    int nbSameBall = 1;
     int i = x-1 , j = y+1;
-    while(i>=0 && j < board[i].size() && nbMemeBille < 5
+    while(i>=0 && j < board[i].size() && nbSameBall < 5
           && board[i][j] == board[x][y]){
         i--;
         j++;
-        nbMemeBille++;
+        nbSameBall++;
     }
-    if(nbMemeBille<5){
+    if(nbSameBall<5){
         i = x+1;
         j = y-1;
-        while(i < board.size() && j >= 0 && nbMemeBille < 5
+        while(i < board.size() && j >= 0 && nbSameBall < 5
               && board[i][j] == board[x][y]){
             i++;
             j--;
-            nbMemeBille++;
+            nbSameBall++;
         }
     }
-    return nbMemeBille == 5;
+    return nbSameBall == 5;
 }
 
-bool Board::pentagoDiagonaleGauche(int x, int y){
-    int nbMemeBille = 1;
+bool Board::pentagoLeftDiagonal(int x, int y){
+    int nbSameBall = 1;
     int i = x+1 , j = y+1;
-    while(i<board.size() && j < board[i].size() && nbMemeBille < 5
+    while(i<board.size() && j < board[i].size() && nbSameBall < 5
           && board[i][j] == board[x][y]){
         i++;
         j++;
-        nbMemeBille++;
+        nbSameBall++;
     }
-    if(nbMemeBille<5){
+    if(nbSameBall<5){
         i = x-1;
         j = y-1;
         while(i >= 0 && j >= 0 && board[i][j] == board[x][y]
-              && nbMemeBille < 5){
+              && nbSameBall < 5){
             i--;
             j--;
-            nbMemeBille++;
+            nbSameBall++;
         }
     }
-    return nbMemeBille == 5;
+    return nbSameBall == 5;
 }

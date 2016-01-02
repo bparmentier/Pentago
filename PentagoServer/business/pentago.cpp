@@ -15,7 +15,7 @@ void Pentago::play(int x, int y)
         throw PentagoException("La partie est terminée !");
     }
     this->board.placeBall(x,y,gameManager.getCurrentPlayer());
-    finished = board.verifierSuitePion(x,y);
+    finished = board.checkSequencePentago(x,y);
 }
 
 void Pentago::rotate(int miniBoard, Direction direction)
@@ -27,7 +27,7 @@ void Pentago::rotate(int miniBoard, Direction direction)
         throw PentagoException("le mini-plateau choisit est incorrecte !");
     }
     board.rotateMiniBoard(miniBoard, direction);
-    finished = board.verifierSuitePionApresTour(miniBoard);
+    finished = board.checkSequencePentagoAfterRotate(miniBoard);
     if(!finished){
         gameManager.nextPlayer();
     }
@@ -35,11 +35,11 @@ void Pentago::rotate(int miniBoard, Direction direction)
 
 bool Pentago::isFinished() const
 {
-    return finished || board.dernierCoup();
+    return finished || board.lastPlay();
 }
 
 bool Pentago::resultatEgalite() const{
-    return board.dernierCoup();
+    return board.lastPlay();
 }
 
 string Pentago::getWinnerName() {
