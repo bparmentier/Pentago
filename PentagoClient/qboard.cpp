@@ -8,35 +8,47 @@ QBoard::QBoard(QWidget *parent) :
 {
     pentagoGui = dynamic_cast<PentagoGui*>(parent);
     x,y=0;
-    drawMiniBoard(0, 0);
-    drawMiniBoard(0, 160);
-    drawMiniBoard(160, 0);
-    drawMiniBoard(160, 160);
+    drawMiniBoard(TOP_LEFT, 0, 0);
+    drawMiniBoard(TOP_RIGHT, 0, 160);
+    drawMiniBoard(BOTTOM_LEFT, 160, 0);
+    drawMiniBoard(BOTTOM_RIGHT, 160, 160);
 }
 
-void QBoard::drawMiniBoard(qreal x, qreal y,QVector<QVector<PlayerColor>> board)
+void QBoard::drawMiniBoard(MiniBoardPosition miniBoardPosition, qreal x, qreal y,QVector<QVector<PlayerColor>> board)
 {
     QGraphicsRectItem *miniBoard = addRect(0, 0, 50 * BOARD_WIDTH / 2, 50 * BOARD_WIDTH / 2);
     miniBoard->setPos(x, y);
     miniBoard->setBrush(QColor(192, 35, 35));
-    QBallColor tmp;
     QCursor pointingHandCursor{QCursor(Qt::PointingHandCursor)};
 
     for (auto line = 0; line < 3; ++line) {
         for (auto column = 0; column < 3; ++column) {
-            if(board.at(line).at(column) != PlayerColor::NONE){
-                if(board.at(line).at(column) == PlayerColor::WHITE) {
-                    tmp = QBallColor::WHITE;
+            if (board.at(line).at(column) != PlayerColor::NONE) {
+                QBallColor ballColor;
+                if (board.at(line).at(column) == PlayerColor::WHITE) {
+                    qDebug() << "ballColor : WHITE";
+                    ballColor = QBallColor::WHITE;
+                } else {
+                    qDebug() << "ballColor : BLACK";
+                    ballColor = QBallColor::BLACK;
                 }
-                else {
-                    tmp = QBallColor::BLACK;
-                }
-                QBall *ball = new QBall(tmp);
+                QBall *ball = new QBall(ballColor);
                 addItem(ball);
                 ball->setPos(x + line * 50 + 10, y + column * 50 + 10);
-            }
-            else{
+            } else {
                 QHole *hole = new QHole();
+                int holeLineIndex = line;
+                int holeColumnIndex = column;
+                if (miniBoardPosition == BOTTOM_LEFT
+                        || miniBoardPosition == BOTTOM_RIGHT) {
+                    holeLineIndex += 3;
+                }
+                if (miniBoardPosition == TOP_RIGHT
+                        || miniBoardPosition == BOTTOM_RIGHT) {
+                    holeColumnIndex += 3;
+                }
+                hole->setData(KEY_LINE, holeLineIndex);
+                hole->setData(KEY_COLUMN, holeColumnIndex);
                 addItem(hole);
                 hole->setPos(x + line * 50 + 10, y + column * 50 + 10);
                 hole->setCursor(pointingHandCursor);
@@ -45,7 +57,7 @@ void QBoard::drawMiniBoard(qreal x, qreal y,QVector<QVector<PlayerColor>> board)
         }
     }
 }
-void QBoard::drawMiniBoard(qreal x, qreal y)
+void QBoard::drawMiniBoard(MiniBoardPosition miniBoardPosition, qreal x, qreal y)
 {
     QGraphicsRectItem *miniBoard = addRect(0, 0, 50 * BOARD_WIDTH / 2, 50 * BOARD_WIDTH / 2);
     miniBoard->setPos(x, y);
@@ -55,6 +67,18 @@ void QBoard::drawMiniBoard(qreal x, qreal y)
     for (auto line = 0; line < 3; ++line) {
         for (auto column = 0; column < 3; ++column) {
             QHole *hole = new QHole();
+            int holeLineIndex = line;
+            int holeColumnIndex = column;
+            if (miniBoardPosition == BOTTOM_LEFT
+                    || miniBoardPosition == BOTTOM_RIGHT) {
+                holeLineIndex += 3;
+            }
+            if (miniBoardPosition == TOP_RIGHT
+                    || miniBoardPosition == BOTTOM_RIGHT) {
+                holeColumnIndex += 3;
+            }
+            hole->setData(KEY_LINE, holeLineIndex);
+            hole->setData(KEY_COLUMN, holeColumnIndex);
             addItem(hole);
             hole->setPos(x + line * 50 + 10, y + column * 50 + 10);
             hole->setCursor(pointingHandCursor);
@@ -65,42 +89,41 @@ void QBoard::drawMiniBoard(qreal x, qreal y)
 
 void QBoard::updateBoard(QVector<QVector<PlayerColor> > board)
 {
-
     this->clear();
-    QVector<QVector<PlayerColor>> miniTL(3,QVector<PlayerColor>(3)),miniTR(3,QVector<PlayerColor>(3)),
-            miniBL(3,QVector<PlayerColor>(3)),miniBR(3,QVector<PlayerColor>(3));
+    QVector<QVector<PlayerColor>> miniTL(3, QVector<PlayerColor>(3)),
+            miniTR(3, QVector<PlayerColor>(3)),
+            miniBL(3, QVector<PlayerColor>(3)),
+            miniBR(3, QVector<PlayerColor>(3));
 
-    for(int i = 0;i<3;i++){
-        for( int j = 0;j<3;j++){
-            miniTL[i][j] = board.at(i).at(j);
+    for (int line = 0; line < 3; ++line){
+        for (int column = 0; column < 3; ++column){
+            miniTL[line][column] = board.at(line).at(column);
+        }
+    }
+    for (int line = 0; line < 3; ++line){
+        for (int column = 0; column < 3 ; ++column){
+            miniTR[line][column] = board.at(line).at(column + 3);
+        }
+    }
+    for (int line = 0; line < 3; ++line){
+        for (int column = 0; column < 3; ++column){
+            miniBL[line][column] = board.at(line + 3).at(column);
+        }
+    }
+    for (int line = 0; line < 3; ++line){
+        for (int column = 0; column < 3; ++column){
+            miniBR[line][column] = board.at(line + 3).at(column + 3);
         }
     }
 
-    for(int i = 0;i<3;i++){
-        for(int j = 0,z=3 ; j<3 ; j++,z++){
-            miniTR[i][j] = board[i][z];
-        }
-    }
-    for(int i = 0,y=3;i<3;i++,y++){
-        for( int j = 0,y=3;j<0;j++,y++){
-            miniBL[i][j] = board.at(y).at(j);
-        }
-    }
-    for(int i = 0,y=3;i<3;i++,y++){
-        for( int j = 0,z=3;j<3;j++,z++){
-            miniBR[i][j] = board[y][z];
-        }
-    }
-
-    drawMiniBoard(0, 0,miniTL);
-    drawMiniBoard(0, 160,miniTR);
-    drawMiniBoard(160, 0,miniBL);
-    drawMiniBoard(160, 160,miniBR);
+    drawMiniBoard(TOP_LEFT, 0, 0, miniTL);
+    drawMiniBoard(TOP_RIGHT, 0, 160, miniTR);
+    drawMiniBoard(BOTTOM_LEFT, 160, 0, miniBL);
+    drawMiniBoard(BOTTOM_RIGHT, 160, 160, miniBR);
 }
 
 void QBoard::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    int x,y;
     QGraphicsScene::mousePressEvent(event);
 
     foreach(auto item, items(event->scenePos())) {
@@ -108,8 +131,8 @@ void QBoard::mousePressEvent(QGraphicsSceneMouseEvent *event)
             QBall *ball = new QBall(color);
             addItem(ball);
             ball->setPos(item->scenePos());
-            x = (event->pos().y()-10)/50;
-            y = (event->pos().x()-10)/50;
+            int x = item->data(KEY_LINE).toInt();
+            int y = item->data(KEY_COLUMN).toInt();
             qDebug() << "(" <<x<<","<<y<<")";
             pentagoGui->play(x,y);
             break;
@@ -118,7 +141,7 @@ void QBoard::mousePressEvent(QGraphicsSceneMouseEvent *event)
 }
 void QBoard::setColor(QBallColor aColor){
     color = aColor;
-    if(color == QBallColor::BLACK) otherColor = QBallColor::WHITE;
+    if (color == QBallColor::BLACK) otherColor = QBallColor::WHITE;
     else otherColor = QBallColor::BLACK;
 }
 
