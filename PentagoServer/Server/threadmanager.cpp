@@ -2,18 +2,16 @@
 #include <QtNetwork>
 #include <vector>
 
-using namespace std;
-
 ThreadManager::ThreadManager(qintptr ID, qintptr ID2, QObject *parent) :
     QThread(parent), game(nullptr),firstClientReady{false},secondClientReady{false}
 {
     qDebug() << "new thread created";
-    vector<Player> players;
+
+    std::vector<Player> players;
+
     /* First client */
     firstClientSocket = new QTcpSocket();
-    if(!firstClientSocket->setSocketDescriptor(ID))
-    {
-        // something's wrong, we just emit a signal
+    if(!firstClientSocket->setSocketDescriptor(ID)) {
         emit error(firstClientSocket->error());
         return;
     }
@@ -22,8 +20,7 @@ ThreadManager::ThreadManager(qintptr ID, qintptr ID2, QObject *parent) :
 
     /* Second client */
     secondClientSocket = new QTcpSocket();
-    if(!secondClientSocket->setSocketDescriptor(ID2))
-    {
+    if(!secondClientSocket->setSocketDescriptor(ID2)) {
         emit error(secondClientSocket->error());
         return;
     }
@@ -38,8 +35,10 @@ ThreadManager::ThreadManager(qintptr ID, qintptr ID2, QObject *parent) :
     game = new Pentago(players);
 
     //Envoyer aux joueurs les parametres de la partie
-    Message msg1(TypeMessage::BEGIN_STATE,PlayerColor::WHITE);
-    Message msg2(TypeMessage::BEGIN_STATE,PlayerColor::BLACK);
+    Message msg1(TypeMessage::READY);
+    msg1.setPlayerColor(PlayerColor::WHITE);
+    Message msg2(TypeMessage::READY);
+    msg2.setPlayerColor(PlayerColor::BLACK);
     sendResponseOfServer(msg1,firstClientSocket);
     sendResponseOfServer(msg2,secondClientSocket);
 }
@@ -78,32 +77,13 @@ void ThreadManager::readFromSpecifiedSocket(QTcpSocket * thisSocket)
     processTheRequest(message,thisSocket);
     lengthMessage = 0;
 }
-void ThreadManager::startPlay(){
-    Message msg(TypeMessage::PLAY_STATE,PlayerColor::BLACK,0,0,0,' ',false,true,QVector<QVector<PlayerColor>>());
-    Message msg2(TypeMessage::PLAY_STATE,PlayerColor::BLACK,0,0,0,' ',false,false,QVector<QVector<PlayerColor>>());
-    sendResponseOfServer(msg,firstClientSocket);
-    sendResponseOfServer(msg2,secondClientSocket);
-}
 
 void ThreadManager::processTheRequest(Message message,QTcpSocket * socket)
 {
-    Message serverResponse;
-    switch(message.getType()){
-    case TypeMessage::BEGIN_STATE:
-        if(socket == firstClientSocket) {
-            firstClientReady = true;
-             qDebug() << "Player1 Ready";
-        }else if (socket == secondClientSocket) {
-            secondClientReady = true;
-            qDebug() << "Player2 Ready";
-        }
-        if(firstClientReady && secondClientReady){
-            startPlay();
-        }
-        break;
+    switch (message.getType()){
     case TypeMessage::PLAY:
-        game->play(message.getRow(),message.getColumn(),socket);
-        qDebug()<<"Played";
+        game->play(message.getLine(),message.getColumn(), socket);
+        qDebug()<< QString::fromStdString(game->getCurrentPlayerName()) << " played";
         sendBoardToClients();
         sendRequestRotate();
         break;
@@ -165,7 +145,8 @@ void ThreadManager::sendBoardToClients(){
 
     std::vector<std::vector<Hole>> tmp {game->getBoard()};
     QVector<QVector<PlayerColor>> vec = Message::convertBoard(tmp);
-    Message msg(TypeMessage::BOARD_STATE,PlayerColor::NONE,0,0,0,' ',false,true,vec);
+    Message msg(TypeMessage::BOARD_UPDATE);
+    msg.setBoard(vec);
     sendResponseOfServer(msg);
 
 }

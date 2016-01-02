@@ -4,42 +4,38 @@
 #include <QDataStream>
 
 enum class TypeMessage {
+    READY,
+    PLAYER_TURN,
+    BOARD_UPDATE,
     PLAY,
     ROTATE,
-    PLAY_STATE,
-    ROTATE_STATE,
-    FINAL_STATE,
-    BEGIN_STATE,
-    BOARD_STATE,
+    FINISHED,
     ERROR
 };
 
 inline QDataStream &operator<<( QDataStream &flux, TypeMessage const& type)
 {
-    switch(type){
-    case TypeMessage::PLAY:
+    switch (type) {
+    case TypeMessage::READY:
+        flux << 0;
+        break;
+    case TypeMessage::PLAYER_TURN:
         flux << 1;
         break;
-    case TypeMessage::ROTATE:
+    case TypeMessage::BOARD_UPDATE:
         flux << 2;
         break;
-    case TypeMessage::PLAY_STATE:
+    case TypeMessage::PLAY:
         flux << 3;
         break;
-    case TypeMessage::ROTATE_STATE:
+    case TypeMessage::ROTATE:
         flux << 4;
         break;
-    case TypeMessage::FINAL_STATE:
+    case TypeMessage::FINISHED:
         flux << 5;
         break;
-    case TypeMessage::BEGIN_STATE:
-        flux << 6;
-        break;
-    case TypeMessage::BOARD_STATE:
-        flux << 7;
-        break;
     case TypeMessage::ERROR:
-        flux << 8;
+        flux << 6;
         break;
     }
     return flux;
@@ -50,28 +46,25 @@ inline void operator>>( QDataStream &flux, TypeMessage & type)
     int number;
     flux >> number;
     switch(number){
+    case 0:
+        type = TypeMessage::READY;
+        break;
     case 1:
-        type = TypeMessage::PLAY;
+        type = TypeMessage::PLAYER_TURN;
         break;
     case 2:
-        type = TypeMessage::ROTATE;
+        type = TypeMessage::BOARD_UPDATE;
         break;
     case 3:
-        type = TypeMessage::PLAY_STATE;
+        type = TypeMessage::PLAY;
         break;
     case 4:
-        type = TypeMessage::ROTATE_STATE;
+        type = TypeMessage::ROTATE;
         break;
     case 5:
-        type = TypeMessage::FINAL_STATE;
+        type = TypeMessage::FINISHED;
         break;
     case 6:
-        type = TypeMessage::BEGIN_STATE;
-        break;
-    case 7:
-        type = TypeMessage::BOARD_STATE;
-        break;
-    case 8:
         type = TypeMessage::ERROR;
         break;
     }
