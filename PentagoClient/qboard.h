@@ -22,7 +22,7 @@ private:
     };
 
     QBallColor color;
-    QBallColor otherColor;
+    //QBallColor otherColor;
     std::array<std::array<QGraphicsEllipseItem *, BOARD_WIDTH>, BOARD_WIDTH> holes;
     PentagoGui * pentagoGui;
     void drawMiniBoard(MiniBoardPosition miniBoardPosition, qreal x, qreal y);
@@ -33,7 +33,7 @@ protected:
 
 public:
     QBoard(QWidget *parent = 0);
-    void setColor(QBallColor aColor);
+    void setColor(QBallColor color);
     void updateBoard(QVector<QVector<PlayerColor> > board);
 };
 

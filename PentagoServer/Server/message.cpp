@@ -1,62 +1,119 @@
 #include "message.h"
-Message::Message(){
 
+Message::Message()
+{
 }
 
-Message::Message(TypeMessage type, PlayerColor color, int row, int column,
-        int miniBoard, QChar direction, bool winner, bool yourTurn, QVector<QVector<PlayerColor>> board){
+Message::Message(TypeMessage type)
+{
     this->type = type;
-    this->row = row;
-    this->column = column;
-    this->color = color;
-    this->miniBoard = miniBoard;
-    this->direction = direction;
-    this->winner = winner;
-    this->yourTurn = yourTurn;
+}
+
+void Message::setPlayerColor(PlayerColor color)
+{
+    if (type != TypeMessage::READY
+            && type != TypeMessage::PLAYER_TURN
+            && type != TypeMessage::FINISHED) {
+        throw std::logic_error("The message does not support this parameter");
+    }
+    this->playerColor = color;
+}
+
+void Message::setBoard(QVector<QVector<PlayerColor>> board)
+{
+    if (type != TypeMessage::BOARD_UPDATE) {
+        throw std::logic_error("The message does not support this parameter");
+    }
     this->board = board;
 }
-Message::Message(TypeMessage type,PlayerColor color):
-    type{type},color{color}
+
+void Message::setLine(int line)
 {
+    if (type != TypeMessage::PLAY) {
+        throw std::logic_error("The message does not support this parameter");
+    }
+    this->line = line;
 }
-Message::Message(TypeMessage type, QVector<QVector<PlayerColor>> board):
-    type{type},board{board}
+
+void Message::setColumn(int column)
 {
+    if (type != TypeMessage::PLAY) {
+        throw std::logic_error("The message does not support this parameter");
+    }
+    this->column = column;
 }
-TypeMessage Message::getType() const{
+
+void Message::setClockwiseRotation(bool clockwise)
+{
+    if (type != TypeMessage::ROTATE) {
+        throw std::logic_error("The message does not support this parameter");
+    }
+    this->clockwise = clockwise;
+}
+
+void Message::setError(QString error)
+{
+    if (type != TypeMessage::ERROR) {
+        throw std::logic_error("The message does not support this parameter");
+    }
+    this->error = error;
+}
+
+TypeMessage Message::getType() const
+{
     return type;
 }
 
-int Message::getRow() const{
-    return row;
+PlayerColor Message::getPlayerColor() const
+{
+    if (type != TypeMessage::READY
+            && type != TypeMessage::PLAYER_TURN
+            && type != TypeMessage::FINISHED) {
+        throw std::logic_error("The message does not have this attribute");
+    }
+    return playerColor;
 }
 
-int Message::getColumn() const{
-    return column;
-}
-
-PlayerColor Message::getColor() const{
-    return color;
-}
-
-int Message::getMiniBoard() const{
-    return miniBoard;
-}
-QVector<QVector<PlayerColor>> Message::getBoard()const{
+QVector<QVector<PlayerColor>> Message::getBoard() const
+{
+    if (type != TypeMessage::BOARD_UPDATE) {
+        throw std::logic_error("The message does not have this attribute");
+    }
     return board;
 }
 
-QChar Message::getDirection() const{
-    return direction;
+int Message::getLine() const
+{
+    if (type != TypeMessage::PLAY) {
+        throw std::logic_error("The message does not have this attribute");
+    }
+    return line;
 }
 
-bool Message::getWinner() const{
-    return winner;
+int Message::getColumn() const
+{
+    if (type != TypeMessage::PLAY) {
+        throw std::logic_error("The message does not have this attribute");
+    }
+    return column;
 }
 
-bool Message::getTurn() const{
-    return yourTurn;
+bool Message::isClockwiseRotation() const
+{
+    if (type != TypeMessage::ROTATE) {
+        throw std::logic_error("The message does not have this attribute");
+    }
+    return clockwise;
 }
+
+QString Message::getError() const
+{
+    if (type != TypeMessage::ERROR) {
+        throw std::logic_error("The message does not have this attribute");
+    }
+    return error;
+}
+
 QVector<QVector<PlayerColor>> Message::convertBoard(std::vector<std::vector<Hole>> &vec){
     QVector<QVector<PlayerColor>> newVec(6,QVector<PlayerColor>(6));
     for(unsigned i = 0;i<vec.size();i++){
@@ -77,4 +134,3 @@ QVector<QVector<PlayerColor>> Message::convertBoard(std::vector<std::vector<Hole
     }
     return newVec;
 }
-

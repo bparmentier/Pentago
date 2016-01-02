@@ -30,7 +30,11 @@ PentagoGui::~PentagoGui()
 
 void PentagoGui::play(int x, int y)
 {
-    Message msg(TypeMessage::PLAY,PlayerColor::BLACK,x,y,0,' ',false,true,QVector<QVector<PlayerColor>>());
+    Message msg(TypeMessage::PLAY);
+    msg.setLine(x);
+    msg.setColumn(y);
+    /*Message msg(TypeMessage::PLAY, playerColor, x, y,
+                0, ' ', false, true, QVector<QVector<PlayerColor>>());*/
     sendMessageToServer(msg);
 }
 
@@ -60,39 +64,36 @@ void PentagoGui::sendMessageToServer(Message messageToSend)
 void PentagoGui::processTheMessage(Message messageFromServer)
 {
     switch (messageFromServer.getType()) {
-    case TypeMessage::BEGIN_STATE:
-    {
-        PlayerColor color = messageFromServer.getColor();
-        qDebug() << "Message recu";
-        if(color == PlayerColor::BLACK){
+    case TypeMessage::READY:
+        playerColor = messageFromServer.getPlayerColor();
+        qDebug() << "Message reçu";
+        if (playerColor == PlayerColor::BLACK){
             board->setColor(QBallColor::BLACK);
-        }else{
+        } else {
             board->setColor(QBallColor::WHITE);
         }
-        sendBeginStateToServer(color);
+        //sendBeginStateToServer(playerColor);
         break;
-    }
-    case TypeMessage::PLAY_STATE:
-
-    {
-        qDebug()<<"Request to play from server";
+    case TypeMessage::PLAYER_TURN:
         break;
-    }
-    case TypeMessage::BOARD_STATE:
+    case TypeMessage::BOARD_UPDATE:
     {
-
         QVector<QVector<PlayerColor>> vec = messageFromServer.getBoard();
 
         board->updateBoard(vec);
-        break;
     }
+        break;
+    case TypeMessage::FINISHED:
+        break;
+    case TypeMessage::ERROR:
+        break;
     }
     //traitement de la reponse recu par le server + mise à jour interface ?
 }
-void PentagoGui::sendBeginStateToServer(PlayerColor color){
-    Message msg(TypeMessage::BEGIN_STATE,color);
+/*void PentagoGui::sendBeginStateToServer(PlayerColor color){
+    Message msg(TypeMessage::READY);
     sendMessageToServer(msg);
-}
+}*/
 
 
 void PentagoGui::onConnectClicked() // bouton du menu qui permet de lancer une partie et ainsi de se connecter au serveur?

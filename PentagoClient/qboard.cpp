@@ -138,10 +138,10 @@ void QBoard::mousePressEvent(QGraphicsSceneMouseEvent *event)
         }
     }
 }
-void QBoard::setColor(QBallColor aColor){
-    color = aColor;
-    if (color == QBallColor::BLACK) otherColor = QBallColor::WHITE;
-    else otherColor = QBallColor::BLACK;
+void QBoard::setColor(QBallColor color){
+    this->color = color;
+    /*if (color == QBallColor::BLACK) otherColor = QBallColor::WHITE;
+    else otherColor = QBallColor::BLACK;*/
 }
 
 
