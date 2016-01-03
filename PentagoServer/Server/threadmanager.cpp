@@ -97,7 +97,7 @@ void ThreadManager::processTheRequest(Message message,QTcpSocket * socket)
         break;
     case TypeMessage::ROTATE:
         qDebug() << "ROTATE action received";
-        game->rotate(message.getMiniBoardIndice(),message.isClockwiseRotation() == true ? Direction::CLOCKWISE : Direction::COUNTERCLOCKWISE, socket);
+        game->rotate(message.getMiniBoardIndice(),message.isClockwiseRotation() == false ? Direction::CLOCKWISE : Direction::COUNTERCLOCKWISE, socket);
         sendPlaceBallRequest();
         break;
     }

@@ -8,8 +8,8 @@ QBoard::QBoard(QWidget *parent) :
 {
     pentagoGui = dynamic_cast<PentagoGui*>(parent);
     drawMiniBoard(TOP_LEFT, 0, 0);
-    drawMiniBoard(TOP_RIGHT, 0, 160);
-    drawMiniBoard(BOTTOM_LEFT, 160, 0);
+    drawMiniBoard(BOTTOM_LEFT, 0, 160);
+    drawMiniBoard(TOP_RIGHT, 160, 0);
     drawMiniBoard(BOTTOM_RIGHT, 160, 160);
 }
 
@@ -116,8 +116,8 @@ void QBoard::updateBoard(QVector<QVector<PlayerColor> > board)
     }
 
     drawMiniBoard(TOP_LEFT, 0, 0, miniTL);
-    drawMiniBoard(TOP_RIGHT, 0, 160, miniTR);
-    drawMiniBoard(BOTTOM_LEFT, 160, 0, miniBL);
+    drawMiniBoard(BOTTOM_LEFT, 0, 160, miniBL);
+    drawMiniBoard(TOP_RIGHT, 160, 0, miniTR);
     drawMiniBoard(BOTTOM_RIGHT, 160, 160, miniBR);
 }
 
