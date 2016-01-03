@@ -123,10 +123,6 @@ void QBoard::updateBoard(QVector<QVector<PlayerColor> > board)
 
 void QBoard::readyrotate()
 {
-    for(auto e:arrows) {
-        removeItem(e);
-        delete e;
-    }
     arrows.clear();
     RotationArrow * mini1CW = new RotationArrow(2,Direction::CLOCKWISE);
     RotationArrow * mini1CCW = new RotationArrow(2,Direction::COUNTERCLOCKWISE);
