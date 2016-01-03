@@ -121,6 +121,9 @@ void PentagoGui::processTheMessage(Message messageFromServer)
         break;
     case TypeMessage::FINISHED:
     {
+        QVector<QVector<PlayerColor>> vec = messageFromServer.getBoard();
+        board->updateBoard(vec);
+
         QString endMessage;
         QString endTitle;
         if (messageFromServer.getPlayerColor() == playerColor) {

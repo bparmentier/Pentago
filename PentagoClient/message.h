@@ -102,6 +102,7 @@ inline QDataStream &operator<<( QDataStream &flux, const Message &message)
         break;
     case TypeMessage::FINISHED:
         flux << message.getPlayerColor();
+        flux << message.getBoard();
         break;
     case TypeMessage::ERROR:
         flux << message.getError();
@@ -119,7 +120,6 @@ inline void operator>>( QDataStream &flux, Message & msg)
     msg = Message(type);
     switch (type) {
     case TypeMessage::READY:
-    case TypeMessage::FINISHED:
         {
             PlayerColor color;
             flux >> color;
@@ -159,6 +159,16 @@ inline void operator>>( QDataStream &flux, Message & msg)
         flux >> isClockwiseRotation;
         msg.setMiniBoardIndice(miniBoardIndice);
         msg.setClockwiseRotation(isClockwiseRotation);
+        break;
+    case TypeMessage::FINISHED:
+        {
+            PlayerColor color;
+            QVector<QVector<PlayerColor>> board;
+            flux >> color;
+            flux >> board;
+            msg.setPlayerColor(color);
+            msg.setBoard(board);
+        }
         break;
     case TypeMessage::ERROR:
         QString error;

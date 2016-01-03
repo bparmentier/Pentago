@@ -207,8 +207,12 @@ void ThreadManager::sendError(const QString &message,QTcpSocket *socket )
 void ThreadManager::sendEndGameMessage()
 {
     qDebug() << "Sending finished status";
+    std::vector<std::vector<Hole>> tmp {game->getBoard()};
+    QVector<QVector<PlayerColor>> vec = Message::convertBoard(tmp);
+
     Message msg(TypeMessage::FINISHED);
     msg.setPlayerColor(ballToPlayerColor(game->getWinnerBallColor()));
+    msg.setBoard(vec);
     sendResponseOfServer(msg);
 }
 
