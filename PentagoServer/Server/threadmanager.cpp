@@ -109,7 +109,7 @@ void ThreadManager::processTheRequest(Message message,QTcpSocket * socket)
         qDebug() << "ROTATE action received";
         try {
             game->rotate(message.getMiniBoardIndice(),
-                     message.isClockwiseRotation() == false ?
+                     message.isClockwiseRotation() ?
                          Direction::CLOCKWISE : Direction::COUNTERCLOCKWISE,
                      socket);
             if (game->isFinished()) {
@@ -198,6 +198,7 @@ void ThreadManager::sendRotateRequest()
 
 void ThreadManager::sendError(const QString &message,QTcpSocket *socket )
 {
+    qDebug() << "Sending error";
     Message msg(TypeMessage::ERROR);
     msg.setError(message);
     sendResponseOfServer(msg,socket);
@@ -205,6 +206,7 @@ void ThreadManager::sendError(const QString &message,QTcpSocket *socket )
 
 void ThreadManager::sendEndGameMessage()
 {
+    qDebug() << "Sending finished status";
     Message msg(TypeMessage::FINISHED);
     msg.setPlayerColor(ballToPlayerColor(game->getWinnerBallColor()));
     sendResponseOfServer(msg);
