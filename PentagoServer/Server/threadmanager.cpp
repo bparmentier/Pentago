@@ -1,9 +1,8 @@
 #include "threadmanager.h"
 #include <QtNetwork>
 #include <vector>
-
 ThreadManager::ThreadManager(qintptr ID, qintptr ID2, QObject *parent) :
-    QThread(parent), game(nullptr),firstClientReady{false},secondClientReady{false}
+    QThread(parent), game(nullptr),firstClientReady{false},secondClientReady{false},nextAction{Message::GameAction::PLACE_BALL}
 {
     qDebug() << "new thread created";
 
@@ -36,11 +35,13 @@ ThreadManager::ThreadManager(qintptr ID, qintptr ID2, QObject *parent) :
 
     //Envoyer aux joueurs les parametres de la partie
     Message msg1(TypeMessage::READY);
-    msg1.setPlayerColor(PlayerColor::WHITE);
+    msg1.setPlayerColor(PlayerColor::BLACK);
     Message msg2(TypeMessage::READY);
-    msg2.setPlayerColor(PlayerColor::BLACK);
+    msg2.setPlayerColor(PlayerColor::WHITE);
     sendResponseOfServer(msg1,firstClientSocket);
     sendResponseOfServer(msg2,secondClientSocket);
+
+
 }
 
 void ThreadManager::run()
@@ -81,22 +82,41 @@ void ThreadManager::readFromSpecifiedSocket(QTcpSocket * thisSocket)
 void ThreadManager::processTheRequest(Message message,QTcpSocket * socket)
 {
     switch (message.getType()){
+    case TypeMessage::READY:
+        if(socket == firstClientSocket)firstClientReady = true;
+        if(socket == secondClientSocket)secondClientReady = true;
+        if(firstClientReady && secondClientReady){
+            Message msg(TypeMessage::PLAYER_TURN);
+            msg.setGameAction(Message::GameAction::PLACE_BALL);
+            msg.setPlayerColor(PlayerColor::NONE);
+            sendResponseOfServer(msg,nextSocketPlayer);
+        }
+        break;
     case TypeMessage::PLAY:
         game->play(message.getLine(),message.getColumn(), socket);
         qDebug()<< QString::fromStdString(game->getCurrentPlayerName()) << " played";
         sendBoardToClients();
-        sendRequestRotate();
         break;
     case TypeMessage::ROTATE:
-        // action on rotate request
+        game->rotate(message.getMiniBoardIndice(),message.isClockwiseRotation() == true ? Direction::CLOCKWISE : Direction::COUNTERCLOCKWISE,nextSocketPlayer);
+        sendBoardToClients();
+        nextAction = Message::GameAction::ROTATE;
+        break;
+    case TypeMessage::BOARD_UPDATE:
+        if(nextAction == Message::GameAction::PLACE_BALL){
+            qDebug() << "Can send rotate request";
+            if(socket = nextSocketPlayer) sendRequestRotate();
+        }
         break;
     }
-    /*sendResponseOfServer(serverResponse); // mise à jour de l'interface du client
+}
+
+/*sendResponseOfServer(serverResponse); // mise à jour de l'interface du client
     if(game->isFinished()){
         serverResponse = Message();
         sendResponseOfServer(serverResponse); // envoie de l'etat final du jeu ?
     }*/
-}
+
 
 void ThreadManager::disconnected() // probleme lors de la deconnexion d'un client, envoie à l'autre client qu'il a gagné par forfait puis le deconnecter? :/
 {
@@ -152,5 +172,7 @@ void ThreadManager::sendBoardToClients(){
 }
 
 void ThreadManager::sendRequestRotate(){
-
+    Message msg(TypeMessage::PLAYER_TURN);
+    msg.setGameAction(Message::GameAction::ROTATE);
+    sendResponseOfServer(msg,nextSocketPlayer);
 }

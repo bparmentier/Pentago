@@ -127,17 +127,18 @@ void QBoard::readyrotate()
         removeItem(e);
         delete e;
     }
-    RotationArrow * mini1CW = new RotationArrow(1,Direction::CLOCKWISE);
-    RotationArrow * mini1CCW = new RotationArrow(1,Direction::COUNTERCLOCKWISE);
+    arrows.clear();
+    RotationArrow * mini1CW = new RotationArrow(2,Direction::CLOCKWISE);
+    RotationArrow * mini1CCW = new RotationArrow(2,Direction::COUNTERCLOCKWISE);
 
-    RotationArrow * mini0CW = new RotationArrow(0,Direction::CLOCKWISE);
-    RotationArrow * mini0CCW = new RotationArrow(0,Direction::COUNTERCLOCKWISE);
+    RotationArrow * mini0CW = new RotationArrow(1,Direction::CLOCKWISE);
+    RotationArrow * mini0CCW = new RotationArrow(1,Direction::COUNTERCLOCKWISE);
 
-    RotationArrow * mini2CW = new RotationArrow(2,Direction::CLOCKWISE);
-    RotationArrow * mini2CCW = new RotationArrow(2,Direction::COUNTERCLOCKWISE);
+    RotationArrow * mini2CW = new RotationArrow(3,Direction::CLOCKWISE);
+    RotationArrow * mini2CCW = new RotationArrow(3,Direction::COUNTERCLOCKWISE);
 
-    RotationArrow * mini3CW = new RotationArrow(3,Direction::CLOCKWISE);
-    RotationArrow * mini3CCW = new RotationArrow(3,Direction::COUNTERCLOCKWISE);
+    RotationArrow * mini3CW = new RotationArrow(4,Direction::CLOCKWISE);
+    RotationArrow * mini3CCW = new RotationArrow(4,Direction::COUNTERCLOCKWISE);
 
     mini1CW->setPos(340,0);
     mini1CW->setRotation(90);
@@ -196,8 +197,6 @@ void QBoard::mousePressEvent(QGraphicsSceneMouseEvent *event)
 }
 void QBoard::setColor(QBallColor color){
     this->color = color;
-    /*if (color == QBallColor::BLACK) otherColor = QBallColor::WHITE;
-    else otherColor = QBallColor::BLACK;*/
 }
 
 

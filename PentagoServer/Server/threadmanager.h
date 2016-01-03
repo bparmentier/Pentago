@@ -19,6 +19,7 @@ private:
     QTcpSocket * nextSocketPlayer; // joueur duquel on attend le mouvement, si pas lui on refuse de jouer le mouvement demandé !
     Pentago * game;
     quint16 lengthMessage;
+    Message::GameAction nextAction;
 
 public:
     explicit ThreadManager(qintptr ID, qintptr ID2, QObject *parent = 0);

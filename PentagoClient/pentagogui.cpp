@@ -10,6 +10,7 @@ PentagoGui::PentagoGui(QWidget *parent) :
     ui->graphicsView->setHidden(true);
     qApp->installEventFilter(this);
     thisClient = new QTcpSocket(this);
+    turn = false;
     connect(thisClient, SIGNAL(readyRead()), this, SLOT(readyRead()));
     connect(thisClient, SIGNAL(connected()), this, SLOT(connected()));
     connect(thisClient, SIGNAL(disconnected()), this, SLOT(disconnected()));
@@ -20,6 +21,7 @@ PentagoGui::PentagoGui(QWidget *parent) :
             &QCoreApplication::quit);
 
     lengthMessage = 0;
+    ui->graphicsView->setDisabled(true);
 }
 
 PentagoGui::~PentagoGui()
@@ -44,6 +46,7 @@ void PentagoGui::rotate(int miniboard, bool clockwise)
     msg.setClockwiseRotation(clockwise);
     msg.setMiniBoardIndice(miniboard);
     sendMessageToServer(msg);
+    turn = false;
 }
 
 void PentagoGui::onPlayRequest()
@@ -73,20 +76,39 @@ void PentagoGui::processTheMessage(Message messageFromServer)
 {
     switch (messageFromServer.getType()) {
     case TypeMessage::READY:
+    {
         playerColor = messageFromServer.getPlayerColor();
         qDebug() << "Message reçu";
         if (playerColor == PlayerColor::BLACK){
             board->setColor(QBallColor::BLACK);
+            qDebug() << "BLACK";
         } else {
             board->setColor(QBallColor::WHITE);
+            qDebug() << "WHITE";
         }
+        Message msg(TypeMessage::READY);
+        sendMessageToServer(msg);
+    }
         break;
     case TypeMessage::PLAYER_TURN:
+    {
+        if(!turn){
+            ui->graphicsView->setDisabled(false);
+            turn = true;
+        }
+        if(messageFromServer.getGameAction() == Message::GameAction::ROTATE) {
+            qDebug() << "Ready to rotate";
+            board->readyrotate();
+        }
+    }
         break;
+
     case TypeMessage::BOARD_UPDATE:
     {
         QVector<QVector<PlayerColor>> vec = messageFromServer.getBoard();
         board->updateBoard(vec);
+        Message msg(TypeMessage::BOARD_UPDATE);
+        sendMessageToServer(msg);
     }
         break;
     case TypeMessage::FINISHED:

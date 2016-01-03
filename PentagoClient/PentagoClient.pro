@@ -36,7 +36,8 @@ HEADERS  += pentagogui.h \
     rotationarrow.h \
     direction.h
 
-FORMS    += pentagogui.ui
+FORMS    += pentagogui.ui \
+    dialog.ui
 
 RESOURCES += \
     ressources.qrc

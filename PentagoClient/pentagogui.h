@@ -29,6 +29,7 @@ private:
     quint16 lengthMessage;
     QBoard *board;
     PlayerColor playerColor;
+    bool turn;
 
 private slots:
     void onPlayRequest();
