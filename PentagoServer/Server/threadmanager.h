@@ -41,5 +41,6 @@ private:
     void startPlay();
     void sendBoardToClients();
     void sendRequestRotate();
+    void changeNextSocketPlayer();
 };
 #endif // CLIENTTHREAD_H

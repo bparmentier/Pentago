@@ -95,17 +95,21 @@ void ThreadManager::processTheRequest(Message message,QTcpSocket * socket)
     case TypeMessage::PLAY:
         game->play(message.getLine(),message.getColumn(), socket);
         qDebug()<< QString::fromStdString(game->getCurrentPlayerName()) << " played";
+        nextAction = Message::GameAction::ROTATE;
         sendBoardToClients();
         break;
     case TypeMessage::ROTATE:
         game->rotate(message.getMiniBoardIndice(),message.isClockwiseRotation() == true ? Direction::CLOCKWISE : Direction::COUNTERCLOCKWISE,nextSocketPlayer);
+        nextAction = Message::GameAction::PLACE_BALL;
         sendBoardToClients();
-        nextAction = Message::GameAction::ROTATE;
+        changeNextSocketPlayer();
         break;
     case TypeMessage::BOARD_UPDATE:
-        if(nextAction == Message::GameAction::PLACE_BALL){
-            qDebug() << "Can send rotate request";
-            if(socket = nextSocketPlayer) sendRequestRotate();
+        if(nextAction == Message::GameAction::ROTATE){
+        qDebug() <<" ENTERED";
+            if(socket == nextSocketPlayer){
+                sendRequestRotate();
+            }
         }
         break;
     }
@@ -175,4 +179,10 @@ void ThreadManager::sendRequestRotate(){
     Message msg(TypeMessage::PLAYER_TURN);
     msg.setGameAction(Message::GameAction::ROTATE);
     sendResponseOfServer(msg,nextSocketPlayer);
+}
+
+void ThreadManager::changeNextSocketPlayer()
+{
+    if(nextSocketPlayer == firstClientSocket) nextSocketPlayer = secondClientSocket;
+    else nextSocketPlayer = firstClientSocket;
 }
