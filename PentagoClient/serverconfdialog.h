@@ -14,8 +14,8 @@ class ServerConfDialog : public QDialog
 public:
     explicit ServerConfDialog(QWidget *parent = 0);
     ~ServerConfDialog();
-    QString getServerAdress();
-    QString getServerPort();
+    QString getServerAdress();const
+    QString getServerPort()const;
 
 private:
     Ui::ServerConfDialog *ui;
