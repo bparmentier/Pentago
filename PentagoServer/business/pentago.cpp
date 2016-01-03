@@ -70,6 +70,14 @@ string Pentago::getWinnerName() {
     return gameManager.getNamePlayerByColor(winner);
 }
 
+QTcpSocket * Pentago::getWinnerSocket()
+{
+    if(!isFinished()){
+        throw PentagoException("error, la partie n'est pas terminé");
+    }
+    return gameManager.getIdentifierPlayerByColor(winner);
+}
+
 string Pentago::getCurrentPlayerName()
 {
     return gameManager.getCurrentPlayer()->getName();

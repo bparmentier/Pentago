@@ -29,3 +29,15 @@ std::string GameManager::getNamePlayerByColor(BallColor color){
         return this->players.at(1).getName();
     }
 }
+
+QTcpSocket * GameManager::getIdentifierPlayerByColor(BallColor color)
+{
+    if(color == BallColor::NONE){
+        throw PentagoException("il n'y a pas de gagnant !");
+    }
+    if(color == this->players.at(0).getBallColor()){
+        return this->players.at(0).getPlayerIdentifier();
+    }else{
+        return this->players.at(1).getPlayerIdentifier();
+    }
+}

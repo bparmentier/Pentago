@@ -60,6 +60,13 @@ public:
     std::string getWinnerName();
 
     /*!
+     * \brief permet d'obtenir le socket du joueur gagnant
+     * \return le socket du joueur
+     * \throw PentagoException si la partie n'est pas terminée
+     */
+    QTcpSocket *getWinnerSocket();
+
+    /*!
      * \brief permet d'obtenir le nom du joueur courant de la partie
      * \return le nom du joueur courant
      */

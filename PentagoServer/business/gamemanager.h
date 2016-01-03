@@ -35,6 +35,13 @@ public:
      * \return le nom du joueur
      */
     std::string getNamePlayerByColor(BallColor color);
+
+    /*!
+     * \brief permet d'obtenir le socket du client lié à la couleur
+     * \param color couleur du joueur qu'on désire
+     * \return le socket
+     */
+    QTcpSocket * getIdentifierPlayerByColor(BallColor color);
 };
 
 #endif // GAMEMANAGER_H
