@@ -126,6 +126,9 @@ void PentagoGui::processTheMessage(Message messageFromServer)
         if (messageFromServer.getPlayerColor() == playerColor) {
             endTitle = "Congratulations!";
             endMessage = "You won!";
+        } else if (messageFromServer.getPlayerColor() == PlayerColor::NONE) {
+            endTitle = "Draw game";
+            endMessage = "Nobody won!";
         } else {
             endTitle = "Too bad!";
             endMessage = "You lost!";
