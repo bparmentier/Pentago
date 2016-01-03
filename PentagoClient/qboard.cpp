@@ -174,9 +174,6 @@ void QBoard::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
     foreach(auto item, items(event->scenePos())) {
         if(item->type() == QHole::Type) {
-            QBall *ball = new QBall(color);
-            addItem(ball);
-            ball->setPos(item->scenePos());
             int x = item->data(KEY_LINE).toInt();
             int y = item->data(KEY_COLUMN).toInt();
             qDebug() << "(" <<x<<","<<y<<")";
