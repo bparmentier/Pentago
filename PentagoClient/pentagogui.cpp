@@ -119,9 +119,25 @@ void PentagoGui::processTheMessage(Message messageFromServer)
     }
         break;
     case TypeMessage::FINISHED:
+    {
+        QString endMessage;
+        QString endTitle;
+        if (messageFromServer.getPlayerColor() == playerColor) {
+            endTitle = "Congratulations!";
+            endMessage = "You won!";
+        } else {
+            endTitle = "Too bad!";
+            endMessage = "You lost!";
+        }
+        QMessageBox::information(this, endTitle, endMessage);
+        ui->graphicsView->setDisabled(true);
+    }
         break;
     case TypeMessage::ERROR:
-        QMessageBox::information(this,"Erreur",messageFromServer.getError());
+    {
+        QMessageBox::information(this, "Erreur",
+                                 messageFromServer.getError());
+    }
         break;
     }
 }

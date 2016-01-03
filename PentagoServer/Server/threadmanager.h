@@ -43,6 +43,7 @@ private:
     void sendPlaceBallRequest();
     void sendRotateRequest();
     void sendError(const QString &message, QTcpSocket *socket);
+    void sendEndGameMessage();
 
     static PlayerColor ballToPlayerColor(BallColor ballColor);
 };

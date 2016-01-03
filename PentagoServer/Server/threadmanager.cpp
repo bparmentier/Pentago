@@ -92,21 +92,32 @@ void ThreadManager::processTheRequest(Message message,QTcpSocket * socket)
         break;
     case TypeMessage::PLAY:
         qDebug() << "PLAY action received";
-        try{
-        game->play(message.getLine(),message.getColumn(), socket);
-        qDebug()<< QString::fromStdString(game->getCurrentPlayerName()) << " played";
-        sendRotateRequest();
-    }catch(PentagoException &e){
-            sendError(e.what(),socket);
+        try {
+            game->play(message.getLine(),message.getColumn(), socket);
+            qDebug()<< QString::fromStdString(game->getCurrentPlayerName()) << " played";
+            if (game->isFinished()) {
+                sendEndGameMessage();
+            } else {
+                sendRotateRequest();
+            }
+        } catch (PentagoException &e) {
+            sendError(e.what(), socket);
         }
         break;
 
     case TypeMessage::ROTATE:
         qDebug() << "ROTATE action received";
-        try{
-        game->rotate(message.getMiniBoardIndice(),message.isClockwiseRotation() == false ? Direction::CLOCKWISE : Direction::COUNTERCLOCKWISE, socket);
-        sendPlaceBallRequest();
-    } catch(PentagoException &e){
+        try {
+            game->rotate(message.getMiniBoardIndice(),
+                     message.isClockwiseRotation() == false ?
+                         Direction::CLOCKWISE : Direction::COUNTERCLOCKWISE,
+                     socket);
+            if (game->isFinished()) {
+                sendEndGameMessage();
+            } else {
+                sendPlaceBallRequest();
+            }
+        } catch (PentagoException &e) {
             sendError(e.what(),socket);
         }
         break;
@@ -190,6 +201,13 @@ void ThreadManager::sendError(const QString &message,QTcpSocket *socket )
     Message msg(TypeMessage::ERROR);
     msg.setError(message);
     sendResponseOfServer(msg,socket);
+}
+
+void ThreadManager::sendEndGameMessage()
+{
+    Message msg(TypeMessage::FINISHED);
+    msg.setPlayerColor(ballToPlayerColor(game->getWinnerBallColor()));
+    sendResponseOfServer(msg);
 }
 
 PlayerColor ThreadManager::ballToPlayerColor(BallColor ballColor)

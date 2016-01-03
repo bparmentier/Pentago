@@ -60,6 +60,13 @@ public:
     std::string getWinnerName();
 
     /*!
+     * \brief permet d'obtenir la couleur des billes du joueur gagnant
+     * \return la couleur des billes du joueur gagnant
+     * \throw PentagoException si la partie n'est pas terminée
+     */
+    BallColor getWinnerBallColor();
+
+    /*!
      * \brief permet d'obtenir le socket du joueur gagnant
      * \return le socket du joueur
      * \throw PentagoException si la partie n'est pas terminée
