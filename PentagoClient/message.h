@@ -87,6 +87,7 @@ inline QDataStream &operator<<( QDataStream &flux, const Message &message)
     case TypeMessage::PLAYER_TURN:
         flux << message.getPlayerColor();
         flux << message.getGameAction();
+        flux << message.getBoard();
         break;
     case TypeMessage::BOARD_UPDATE:
         flux << message.getBoard();
@@ -129,10 +130,13 @@ inline void operator>>( QDataStream &flux, Message & msg)
         {
             PlayerColor color;
             Message::GameAction action;
+            QVector<QVector<PlayerColor>> board;
             flux >> color;
             flux >> action;
+            flux >> board;
             msg.setPlayerColor(color);
             msg.setGameAction(action);
+            msg.setBoard(board);
         }
         break;
     case TypeMessage::BOARD_UPDATE:

@@ -40,7 +40,10 @@ private:
     void sendResponseOfServer(const Message &message, QTcpSocket *socket);
     void startPlay();
     void sendBoardToClients();
-    void sendRequestRotate();
-    void changeNextSocketPlayer();
+    void sendPlaceBallRequest();
+    void sendRotateRequest();
+
+    static PlayerColor ballToPlayerColor(BallColor ballColor);
 };
+
 #endif // CLIENTTHREAD_H
