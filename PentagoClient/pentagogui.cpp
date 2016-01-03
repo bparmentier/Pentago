@@ -1,6 +1,7 @@
 #include "pentagogui.h"
 #include "ui_pentagogui.h"
 #include "qhole.h"
+#include <QMessageBox>
 
 PentagoGui::PentagoGui(QWidget *parent) :
     QMainWindow(parent),
@@ -117,18 +118,10 @@ void PentagoGui::processTheMessage(Message messageFromServer)
         }
     }
         break;
-
-    /*case TypeMessage::BOARD_UPDATE:
-    {
-        QVector<QVector<PlayerColor>> vec = messageFromServer.getBoard();
-        board->updateBoard(vec);
-        Message msg(TypeMessage::BOARD_UPDATE);
-        sendMessageToServer(msg);
-    }
-        break;*/
     case TypeMessage::FINISHED:
         break;
     case TypeMessage::ERROR:
+        QMessageBox::information(this,"Erreur",messageFromServer.getError());
         break;
     }
 }
@@ -178,12 +171,15 @@ void PentagoGui::errorSocket(QAbstractSocket::SocketError error) // Ce slot est 
     {
     case QAbstractSocket::HostNotFoundError:
         qDebug() << "ERREUR : le serveur n'a pas pu être trouvé. Vérifiez l'IP et le port.";
+        QMessageBox::information(this,"Error Connecting to server","Server was not found.\n Please check ip adress and port.");
         break;
     case QAbstractSocket::ConnectionRefusedError:
         qDebug() << "ERREUR : le serveur a refusé la connexion. Vérifiez si le programme \"serveur\" a bien été lancé. Vérifiez aussi l'IP et le port.";
+        QMessageBox::information(this,"Error Connecting to server","Server was not found.\n Please check if server is running and check ip adress and port.");
         break;
     case QAbstractSocket::RemoteHostClosedError:
         qDebug() <<"ERREUR : le serveur a coupé la connexion.";
+        QMessageBox::information(this,"Server ended connection","The server ended the connection");
         break;
     default:
         qDebug() <<"ERREUR : " << thisClient->errorString();
