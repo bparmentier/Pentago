@@ -33,7 +33,7 @@ void QBoard::drawMiniBoard(MiniBoardPosition miniBoardPosition, qreal x, qreal y
                 }
                 QBall *ball = new QBall(ballColor);
                 addItem(ball);
-                ball->setPos(x + line * 50 + 10, y + column * 50 + 10);
+                ball->setPos(x + column * 50 + 10, y + line * 50 + 10);
             } else {
                 QHole *hole = new QHole();
                 int holeLineIndex = line;
@@ -49,7 +49,7 @@ void QBoard::drawMiniBoard(MiniBoardPosition miniBoardPosition, qreal x, qreal y
                 hole->setData(KEY_LINE, holeLineIndex);
                 hole->setData(KEY_COLUMN, holeColumnIndex);
                 addItem(hole);
-                hole->setPos(x + line * 50 + 10, y + column * 50 + 10);
+                hole->setPos(x + column * 50 + 10, y + line * 50 + 10);
                 hole->setCursor(pointingHandCursor);
                 holes.at(line).at(column) = hole;
             }
@@ -79,7 +79,7 @@ void QBoard::drawMiniBoard(MiniBoardPosition miniBoardPosition, qreal x, qreal y
             hole->setData(KEY_LINE, holeLineIndex);
             hole->setData(KEY_COLUMN, holeColumnIndex);
             addItem(hole);
-            hole->setPos(x + line * 50 + 10, y + column * 50 + 10);
+            hole->setPos(x + column * 50 + 10, y + line * 50 + 10);
             hole->setCursor(pointingHandCursor);
             holes.at(line).at(column) = hole;
         }
