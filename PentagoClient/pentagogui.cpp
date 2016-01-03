@@ -150,6 +150,8 @@ void PentagoGui::onConnectClicked() // bouton du menu qui permet de lancer une p
     if(ret && !cd.getServerAdress().isEmpty() && !cd.getServerPort().isEmpty() && cd.getServerPort().toUInt() != 0){
         thisClient->abort();
         thisClient->connectToHost(cd.getServerAdress(),cd.getServerPort().toUInt());
+    }else{
+        QMessageBox::information(this,"Incorrect Parameters","The parameters you entered are incorrect :\nPlease check the IP address and port number");
     }
 }
 
