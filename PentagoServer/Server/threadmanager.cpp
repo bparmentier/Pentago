@@ -86,26 +86,27 @@ void ThreadManager::processTheRequest(Message message,QTcpSocket * socket)
         if(socket == firstClientSocket)firstClientReady = true;
         if(socket == secondClientSocket)secondClientReady = true;
         if(firstClientReady && secondClientReady){
-            Message msg(TypeMessage::PLAYER_TURN);
+            /*Message msg(TypeMessage::PLAYER_TURN);
             msg.setGameAction(Message::GameAction::PLACE_BALL);
             msg.setPlayerColor(PlayerColor::NONE);
-            sendResponseOfServer(msg,nextSocketPlayer);
+            sendResponseOfServer(msg,nextSocketPlayer);*/
+            sendPlaceBallRequest();
         }
         break;
     case TypeMessage::PLAY:
         game->play(message.getLine(),message.getColumn(), socket);
         qDebug()<< QString::fromStdString(game->getCurrentPlayerName()) << " played";
-        sendBoardToClients();
+        sendRotateRequest();
         break;
     case TypeMessage::ROTATE:
-        game->rotate(message.getMiniBoardIndice(),message.isClockwiseRotation() == true ? Direction::CLOCKWISE : Direction::COUNTERCLOCKWISE,nextSocketPlayer);
-        sendBoardToClients();
-        nextAction = Message::GameAction::ROTATE;
+        game->rotate(message.getMiniBoardIndice(),message.isClockwiseRotation() == true ? Direction::CLOCKWISE : Direction::COUNTERCLOCKWISE, socket);
+        sendPlaceBallRequest();
+        //nextAction = Message::GameAction::ROTATE;
         break;
     case TypeMessage::BOARD_UPDATE:
         if(nextAction == Message::GameAction::PLACE_BALL){
             qDebug() << "Can send rotate request";
-            if(socket = nextSocketPlayer) sendRequestRotate();
+            //if(socket = nextSocketPlayer) sendRequestRotate();
         }
         break;
     }
@@ -137,17 +138,10 @@ void ThreadManager::disconnected() // probleme lors de la deconnexion d'un clien
 
 void ThreadManager::sendResponseOfServer(const Message & message)
 {
-    QByteArray packet;
-    QDataStream out(&packet, QIODevice::WriteOnly);
-
-    out << (quint16) 0;
-    out << message;
-    out.device()->seek(0);
-    out << (quint16) (packet.size() - sizeof(quint16));
-
-    firstClientSocket->write(packet);
-    secondClientSocket->write(packet);
+    sendResponseOfServer(message, firstClientSocket);
+    sendResponseOfServer(message, secondClientSocket);
 }
+
 void ThreadManager::sendResponseOfServer(const Message & message,QTcpSocket *socket)
 {
     QByteArray packet;
@@ -159,8 +153,8 @@ void ThreadManager::sendResponseOfServer(const Message & message,QTcpSocket *soc
     out << (quint16) (packet.size() - sizeof(quint16));
 
     socket->write(packet);
-
 }
+
 void ThreadManager::sendBoardToClients(){
 
     std::vector<std::vector<Hole>> tmp {game->getBoard()};
@@ -171,8 +165,43 @@ void ThreadManager::sendBoardToClients(){
 
 }
 
-void ThreadManager::sendRequestRotate(){
+void ThreadManager::sendPlaceBallRequest()
+{
+    std::vector<std::vector<Hole>> tmp {game->getBoard()};
+    QVector<QVector<PlayerColor>> vec = Message::convertBoard(tmp);
+
+    Message msg(TypeMessage::PLAYER_TURN);
+    msg.setGameAction(Message::GameAction::PLACE_BALL);
+    msg.setPlayerColor(ballToPlayerColor(game->getCurrentPLayerBallColor()));
+    msg.setBoard(vec);
+    sendResponseOfServer(msg);
+}
+
+void ThreadManager::sendRotateRequest()
+{
+    std::vector<std::vector<Hole>> tmp {game->getBoard()};
+    QVector<QVector<PlayerColor>> vec = Message::convertBoard(tmp);
+
     Message msg(TypeMessage::PLAYER_TURN);
     msg.setGameAction(Message::GameAction::ROTATE);
-    sendResponseOfServer(msg,nextSocketPlayer);
+    msg.setPlayerColor(ballToPlayerColor(game->getCurrentPLayerBallColor()));
+    msg.setBoard(vec);
+    sendResponseOfServer(msg);
+}
+
+PlayerColor ThreadManager::ballToPlayerColor(BallColor ballColor)
+{
+    PlayerColor color;
+    switch (ballColor) {
+    case BallColor::BLACK:
+        color = PlayerColor::BLACK;
+        break;
+    case BallColor::WHITE:
+        color = PlayerColor::WHITE;
+        break;
+    case BallColor::NONE:
+        color = PlayerColor::NONE;
+        break;
+    }
+    return color;
 }

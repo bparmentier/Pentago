@@ -92,13 +92,20 @@ void PentagoGui::processTheMessage(Message messageFromServer)
         break;
     case TypeMessage::PLAYER_TURN:
     {
-        if(!turn){
-            ui->graphicsView->setDisabled(false);
-            turn = true;
-        }
-        if(messageFromServer.getGameAction() == Message::GameAction::ROTATE) {
-            qDebug() << "Ready to rotate";
-            board->readyrotate();
+        QVector<QVector<PlayerColor>> vec = messageFromServer.getBoard();
+        board->updateBoard(vec);
+
+        if (messageFromServer.getGameAction() == Message::GameAction::PLACE_BALL) {
+            if (messageFromServer.getPlayerColor() == playerColor) {
+                qDebug() << "It's my turn";
+                turn = true;
+                ui->graphicsView->setDisabled(false);
+            }
+        } else if (messageFromServer.getGameAction() == Message::GameAction::ROTATE) {
+            if (messageFromServer.getPlayerColor() == playerColor) {
+                qDebug() << "It's my turn";
+                board->readyrotate();
+            }
         }
     }
         break;
