@@ -29,8 +29,8 @@ ThreadManager::ThreadManager(qintptr ID, qintptr ID2, QObject *parent) :
     this->nextSocketPlayer = firstClientSocket;
     this->lengthMessage = 0;
 
-    players.push_back(Player("player1",BallColor::BLACK, this->firstClientSocket));
-    players.push_back(Player("player2",BallColor::WHITE,this->secondClientSocket));
+    players.push_back(Player("player1", BallColor::BLACK, this->firstClientSocket));
+    players.push_back(Player("player2", BallColor::WHITE, this->secondClientSocket));
     game = new Pentago(players);
 
     //Envoyer aux joueurs les parametres de la partie
@@ -83,41 +83,25 @@ void ThreadManager::processTheRequest(Message message,QTcpSocket * socket)
 {
     switch (message.getType()){
     case TypeMessage::READY:
-        if(socket == firstClientSocket)firstClientReady = true;
-        if(socket == secondClientSocket)secondClientReady = true;
-        if(firstClientReady && secondClientReady){
-            /*Message msg(TypeMessage::PLAYER_TURN);
-            msg.setGameAction(Message::GameAction::PLACE_BALL);
-            msg.setPlayerColor(PlayerColor::NONE);
-            sendResponseOfServer(msg,nextSocketPlayer);*/
+        if (socket == firstClientSocket)firstClientReady = true;
+        if (socket == secondClientSocket)secondClientReady = true;
+        if (firstClientReady && secondClientReady){
             sendPlaceBallRequest();
         }
         break;
     case TypeMessage::PLAY:
+        qDebug() << "PLAY action received";
         game->play(message.getLine(),message.getColumn(), socket);
         qDebug()<< QString::fromStdString(game->getCurrentPlayerName()) << " played";
         sendRotateRequest();
         break;
     case TypeMessage::ROTATE:
+        qDebug() << "ROTATE action received";
         game->rotate(message.getMiniBoardIndice(),message.isClockwiseRotation() == true ? Direction::CLOCKWISE : Direction::COUNTERCLOCKWISE, socket);
         sendPlaceBallRequest();
-        //nextAction = Message::GameAction::ROTATE;
-        break;
-    case TypeMessage::BOARD_UPDATE:
-        if(nextAction == Message::GameAction::PLACE_BALL){
-            qDebug() << "Can send rotate request";
-            //if(socket = nextSocketPlayer) sendRequestRotate();
-        }
         break;
     }
 }
-
-/*sendResponseOfServer(serverResponse); // mise à jour de l'interface du client
-    if(game->isFinished()){
-        serverResponse = Message();
-        sendResponseOfServer(serverResponse); // envoie de l'etat final du jeu ?
-    }*/
-
 
 void ThreadManager::disconnected() // probleme lors de la deconnexion d'un client, envoie à l'autre client qu'il a gagné par forfait puis le deconnecter? :/
 {
@@ -167,6 +151,7 @@ void ThreadManager::sendBoardToClients(){
 
 void ThreadManager::sendPlaceBallRequest()
 {
+    qDebug() << "Sending place ball request";
     std::vector<std::vector<Hole>> tmp {game->getBoard()};
     QVector<QVector<PlayerColor>> vec = Message::convertBoard(tmp);
 
@@ -179,6 +164,7 @@ void ThreadManager::sendPlaceBallRequest()
 
 void ThreadManager::sendRotateRequest()
 {
+    qDebug() << "Sending rotate request";
     std::vector<std::vector<Hole>> tmp {game->getBoard()};
     QVector<QVector<PlayerColor>> vec = Message::convertBoard(tmp);
 
