@@ -1,6 +1,7 @@
 #include "threadmanager.h"
 #include <QtNetwork>
 #include <vector>
+#include "business/pentagoexception.h"
 ThreadManager::ThreadManager(qintptr ID, qintptr ID2, QObject *parent) :
     QThread(parent), game(nullptr),firstClientReady{false},secondClientReady{false},nextAction{Message::GameAction::PLACE_BALL}
 {
@@ -91,14 +92,23 @@ void ThreadManager::processTheRequest(Message message,QTcpSocket * socket)
         break;
     case TypeMessage::PLAY:
         qDebug() << "PLAY action received";
+        try{
         game->play(message.getLine(),message.getColumn(), socket);
         qDebug()<< QString::fromStdString(game->getCurrentPlayerName()) << " played";
         sendRotateRequest();
+    }catch(PentagoException &e){
+            sendError(e.what(),socket);
+        }
         break;
+
     case TypeMessage::ROTATE:
         qDebug() << "ROTATE action received";
+        try{
         game->rotate(message.getMiniBoardIndice(),message.isClockwiseRotation() == false ? Direction::CLOCKWISE : Direction::COUNTERCLOCKWISE, socket);
         sendPlaceBallRequest();
+    } catch(PentagoException &e){
+            sendError(e.what(),socket);
+        }
         break;
     }
 }
@@ -173,6 +183,13 @@ void ThreadManager::sendRotateRequest()
     msg.setPlayerColor(ballToPlayerColor(game->getCurrentPLayerBallColor()));
     msg.setBoard(vec);
     sendResponseOfServer(msg);
+}
+
+void ThreadManager::sendError(const QString &message,QTcpSocket *socket )
+{
+    Message msg(TypeMessage::ERROR);
+    msg.setError(message);
+    sendResponseOfServer(msg,socket);
 }
 
 PlayerColor ThreadManager::ballToPlayerColor(BallColor ballColor)

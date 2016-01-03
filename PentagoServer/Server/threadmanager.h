@@ -42,6 +42,7 @@ private:
     void sendBoardToClients();
     void sendPlaceBallRequest();
     void sendRotateRequest();
+    void sendError(const QString &message, QTcpSocket *socket);
 
     static PlayerColor ballToPlayerColor(BallColor ballColor);
 };
