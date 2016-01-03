@@ -6,6 +6,8 @@ ServerConfDialog::ServerConfDialog(QWidget *parent) :
     ui(new Ui::ServerConfDialog)
 {
     ui->setupUi(this);
+    ui->serverAdress->setText("127.0.0.1");
+    ui->serverPort->setText("50885");
 }
 
 ServerConfDialog::~ServerConfDialog()
