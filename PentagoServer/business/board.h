@@ -77,9 +77,9 @@ public:
     /*!
      * \brief permet de vérifier si il y'a un pentago aprés la rotation d'un mini-plateau
      * \param numMiniPlateau numéro du plateau touché par la rotation
-     * \return true si il y'a un pentago false si non
+     * \return la couleur du joueur gagnant si égalité, renvoie la couleur d'une case vide
      */
-    bool checkSequencePentagoAfterRotate(int numMiniPlateau);
+    BallColor checkSequencePentagoAfterRotate(int numMiniPlateau);
 
     /*!
      * \brief permet de savoir si c'est le dernier coup possible sur le plateau

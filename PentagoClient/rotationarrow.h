@@ -10,7 +10,12 @@ private:
     Direction dir;
     QPixmap * pixmap;
 public:
+    enum {
+        Type = UserType + 3
+    };
+
     RotationArrow(int aMiniBoard,Direction aDirection);
+    int type() const;
     int getMiniBoard();
     Direction getDirection();
 protected:

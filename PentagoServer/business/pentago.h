@@ -12,8 +12,8 @@ class Pentago
 public:
     GameManager gameManager;
     Board board;
-    bool finished;
     ActionGame nextAction;
+    BallColor winner;
 
 public:
 
