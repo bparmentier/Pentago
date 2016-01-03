@@ -46,4 +46,3 @@ HEADERS  += \
     Server/playercolor.h \
     business/actiongame.h
 
-FORMS    +=

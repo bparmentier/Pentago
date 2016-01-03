@@ -2,6 +2,7 @@
 #include "ui_pentagogui.h"
 #include "qhole.h"
 #include <QMessageBox>
+#include "serverconfdialog.h"
 
 PentagoGui::PentagoGui(QWidget *parent) :
     QMainWindow(parent),
@@ -144,8 +145,12 @@ void PentagoGui::processTheMessage(Message messageFromServer)
 
 void PentagoGui::onConnectClicked() // bouton du menu qui permet de lancer une partie et ainsi de se connecter au serveur?
 {
-    thisClient->abort();
-    thisClient->connectToHost("127.0.0.1", 50885);
+    ServerConfDialog cd{this};
+    auto ret= cd.exec();
+    if(ret && !cd.getServerAdress().isEmpty() && !cd.getServerPort().isEmpty() && cd.getServerPort().toUInt() != 0){
+        thisClient->abort();
+        thisClient->connectToHost(cd.getServerAdress(),cd.getServerPort().toUInt());
+    }
 }
 
 void PentagoGui::connected() // Ce slot est appelé lorsque la connexion au serveur a réussi

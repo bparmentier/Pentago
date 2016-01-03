@@ -21,7 +21,8 @@ SOURCES += main.cpp\
     qboard.cpp \
     qhole.cpp \
     qball.cpp \
-    rotationarrow.cpp
+    rotationarrow.cpp \
+    serverconfdialog.cpp
 
 HEADERS  += pentagogui.h \
     message.h \
@@ -34,10 +35,11 @@ HEADERS  += pentagogui.h \
     qballcolor.h \
     playercolor.h \
     rotationarrow.h \
-    direction.h
+    direction.h \
+    serverconfdialog.h
 
 FORMS    += pentagogui.ui \
-    dialog.ui
+    serverconfdialog.ui
 
 RESOURCES += \
     ressources.qrc
