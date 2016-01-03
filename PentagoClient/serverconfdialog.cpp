@@ -13,12 +13,12 @@ ServerConfDialog::~ServerConfDialog()
     delete ui;
 }
 
-QString ServerConfDialog::getServerAdress()
+QString ServerConfDialog::getServerAdress() const
 {
     return ui->serverAdress->text();
 }
 
-QString ServerConfDialog::getServerPort()
+QString ServerConfDialog::getServerPort()const
 {
     return ui->serverPort->text();
 }
