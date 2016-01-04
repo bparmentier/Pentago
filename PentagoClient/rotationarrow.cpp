@@ -16,6 +16,12 @@ RotationArrow::RotationArrow(int aMiniBoard, Direction aDirection):
     setPixmap(newPixmap);
 }
 
+RotationArrow::~RotationArrow()
+{
+    delete pixmap;
+    pixmap = nullptr;
+}
+
 int RotationArrow::type() const
 {
     return Type;

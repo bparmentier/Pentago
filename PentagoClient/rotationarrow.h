@@ -25,6 +25,11 @@ public:
     RotationArrow(int aMiniBoard, Direction aDirection);
 
     /*!
+     * /brief destructor of the class
+     */
+    ~RotationArrow();
+
+    /*!
      * \brief Returns the custom type of the item
      * \return the custom type of the item
      */
