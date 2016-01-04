@@ -11,7 +11,6 @@ PentagoGui::PentagoGui(QWidget *parent) :
     ui->setupUi(this);
     ui->graphicsView->setHidden(true);
     thisClient = new QTcpSocket(this);
-    turn = false;
     connect(thisClient, SIGNAL(readyRead()), this, SLOT(readyRead()));
     connect(thisClient, SIGNAL(connected()), this, SLOT(connected()));
     connect(thisClient, SIGNAL(disconnected()), this, SLOT(disconnected()));
@@ -47,7 +46,6 @@ void PentagoGui::rotate(int miniboard, bool clockwise)
     msg.setClockwiseRotation(clockwise);
     msg.setMiniBoardIndice(miniboard);
     sendMessageToServer(msg);
-    turn = false;
 }
 
 void PentagoGui::onPlayRequest()
@@ -82,9 +80,11 @@ void PentagoGui::processTheMessage(Message messageFromServer)
         qDebug() << "Message reçu";
         if (playerColor == PlayerColor::BLACK){
             board->setColor(QBallColor::BLACK);
+            setStatusTip("You play with the black balls");
             qDebug() << "BLACK";
         } else {
             board->setColor(QBallColor::WHITE);
+            setStatusTip("You play with the white balls");
             qDebug() << "WHITE";
         }
         Message msg(TypeMessage::READY);
@@ -101,19 +101,22 @@ void PentagoGui::processTheMessage(Message messageFromServer)
             qDebug() << "PLACE_BALL";
             if (messageFromServer.getPlayerColor() == playerColor) {
                 qDebug() << "It's my turn";
-                turn = true;
+                setStatusTip("Place your ball");
                 ui->graphicsView->setDisabled(false);
             } else {
                 qDebug() << "Other player's turn";
+                setStatusTip("Waiting for the other player to place his ball");
                 ui->graphicsView->setDisabled(true);
             }
         } else if (messageFromServer.getGameAction() == Message::GameAction::ROTATE) {
             qDebug() << "ROTATE";
             if (messageFromServer.getPlayerColor() == playerColor) {
                 qDebug() << "It's my turn";
+                setStatusTip("Rotate a mini-board");
                 board->readyrotate();
             } else {
                 qDebug() << "Other player's turn";
+                setStatusTip("Waiting for the other player to rotate his mini-board");
             }
         }
     }
@@ -137,6 +140,7 @@ void PentagoGui::processTheMessage(Message messageFromServer)
         }
         QMessageBox::information(this, endTitle, endMessage);
         ui->graphicsView->setDisabled(true);
+        showStatusTip("");
     }
         break;
     case TypeMessage::ERROR:
@@ -146,6 +150,11 @@ void PentagoGui::processTheMessage(Message messageFromServer)
     }
         break;
     }
+}
+
+void PentagoGui::showStatusTip(const QString &message)
+{
+    statusBar()->showMessage(message);
 }
 
 void PentagoGui::onConnectClicked() // bouton du menu qui permet de lancer une partie et ainsi de se connecter au serveur?

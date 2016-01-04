@@ -47,7 +47,6 @@ private:
     quint16 lengthMessage;
     QBoard *board;
     PlayerColor playerColor;
-    bool turn;
 
 private slots:
     void onPlayRequest();
@@ -62,6 +61,7 @@ private:
     void sendMessageToServer(Message messageToSend);
     void processTheMessage(Message messageFromServer);
     void sendBeginStateToServer(PlayerColor color);
+    void showStatusTip(const QString &message);
 };
 
 #endif // PENTAGOGUI_H
