@@ -2,12 +2,14 @@
 #include <QtNetwork>
 #include <vector>
 #include "business/pentagoexception.h"
+#include "pentagoserver.h"
 
 ThreadManager::ThreadManager(qintptr ID, qintptr ID2, QObject *parent) :
     QThread(parent), game(nullptr),firstClientReady{false},secondClientReady{false}
 {
     qDebug() << "new thread created";
     std::vector<Player> players;
+    this->parent = (PentagoServer *)parent;
 
     /* First client */
     firstClientSocket = new QTcpSocket();
@@ -145,8 +147,10 @@ void ThreadManager::disconnected() // probleme lors de la deconnexion d'un clien
         delete game;
         game = nullptr;
     }
-    if(!firstClientSocket && !secondClientSocket)
+    if(!firstClientSocket && !secondClientSocket){
+        this->parent->deleteFinishedThread(this);
         exit(0);
+    }
 }
 
 

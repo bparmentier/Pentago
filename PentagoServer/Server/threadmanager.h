@@ -7,6 +7,9 @@
 #include "business/pentago.h"
 #include "message.h"
 #include "type.h"
+#include "pentagoserver.h"
+
+class PentagoServer;
 
 /*!
  * \brief The ThreadManager class Manages a Pentago server thread and processes client requests
@@ -21,14 +24,14 @@ private:
     bool secondClientReady;             /*!<  Indicated if the second client is ready to play */
     Pentago * game;                     /*!<  a Pentago game instance */
     quint16 lengthMessage;              /*!<  used to store the size of a packet to be sent on the network */
-
+    PentagoServer * parent;             /*!<  used when need to delete finished thread from array in server */
 public:
 
     /*!
      * \brief ThreadManager Constructs a new ThreadManager to manage a new thread containing two Sockets (client).
-    *  \param ID a connection descriptor identifier
-    *  \param ID2 a connection descriptor identifier
-    *  \param parent parent Object
+     * \param ID a connection descriptor identifier
+     * \param ID2 a connection descriptor identifier
+     * \param parent parent Object
      */
     explicit ThreadManager(qintptr ID, qintptr ID2, QObject *parent = 0);
 

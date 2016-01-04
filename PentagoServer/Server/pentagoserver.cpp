@@ -22,7 +22,7 @@ void PentagoServer::stopServer()
 {
     close();
     for(auto e : threads){
-        if(e){
+        if(!e->isFinished()){
             e->closeConnections();
         }
     }
@@ -30,7 +30,16 @@ void PentagoServer::stopServer()
     qDebug()<<"Server Stopped";
 }
 
-
+void PentagoServer::deleteFinishedThread(ThreadManager * thread)
+{
+    std::vector<ThreadManager * >threadsTemp;
+    for(int i = 0; i<threads.size(); i++){
+        if(threads.at(i)!=thread){
+            threadsTemp.push_back(threads.at(i));
+        }
+    }
+    threads = threadsTemp;
+}
 
 void PentagoServer::incomingConnection(qintptr socketDescriptor)
 {
