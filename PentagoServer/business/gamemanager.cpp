@@ -36,8 +36,8 @@ QTcpSocket * GameManager::getIdentifierPlayerByColor(BallColor color)
         throw PentagoException("il n'y a pas de gagnant !");
     }
     if(color == this->players.at(0).getBallColor()){
-        return this->players.at(0).getPlayerIdentifier();
+        return this->players.at(0).getPlayerSocket();
     }else{
-        return this->players.at(1).getPlayerIdentifier();
+        return this->players.at(1).getPlayerSocket();
     }
 }

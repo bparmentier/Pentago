@@ -17,7 +17,7 @@ BallColor Player::getBallColor() const
     return ballColor;
 }
 
-QTcpSocket *Player::getPlayerIdentifier() const
+QTcpSocket *Player::getPlayerSocket() const
 {
     return playerIdentifier;
 }

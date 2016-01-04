@@ -16,29 +16,29 @@ private:
 public:
 
     /*!
-     * \brief Constructeur d'un joueur de Pentago
-     * \param name nom du joueur
-     * \param color couleur des billes du joueur
+     * \brief constructor of the player of pentagoConstructeur d'un joueur de Pentago
+     * \param name name of the player
+     * \param color the player ball color
      */
     Player(std::string name, BallColor color, QTcpSocket * playerIdentifier);
 
     /*!
-     * \brief permet d'obtenir le nom du joueur
-     * \return le nom du joueur
+     * \brief allow to get the name of the player
+     * \return the name of the player
      */
     std::string getName() const;
 
     /*!
-     * \brief permet d'obtenir la couleur des billes du joueur
-     * \return la couleur des billes du joueur
+     * \brief allow to get the color of the player ball
+     * \return the color of the ball
      */
     BallColor getBallColor() const;
 
     /*!
-     * \brief permet d'obtenir l'identifiant du joueur
-     * \return l'identifiant du joueur
+     * \brief allow to get the socket of the player
+     * \return the socket of the player
      */
-    QTcpSocket * getPlayerIdentifier() const;
+    QTcpSocket * getPlayerSocket() const;
 
 };
 

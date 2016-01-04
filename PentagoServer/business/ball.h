@@ -10,14 +10,15 @@ private:
     BallColor color;
 
 public:
+
     /*!
-     * \brief constructeur de la class Ball
-     * \param color couleur de la bille
+     * \brief constructor of ball class
+     * \param color color of the ball
      */
     Ball(BallColor color);
 
     /*!
-     * \return la couleur de la bille
+     * \return the color of the ball
      */
     BallColor getColor() const;
 };

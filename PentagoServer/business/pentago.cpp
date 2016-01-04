@@ -14,7 +14,7 @@ void Pentago::play(int x, int y, QTcpSocket * player)
     if(isFinished()){
         throw PentagoException("La partie est terminée !");
     }
-    if(player!=this->gameManager.getCurrentPlayer()->getPlayerIdentifier()){
+    if(player!=this->gameManager.getCurrentPlayer()->getPlayerSocket()){
         throw PentagoException("c'est à votre adversaire de jouer !");
     }
     if(nextAction!=ActionGame::PLAY){
@@ -32,7 +32,7 @@ void Pentago::rotate(int miniBoard, Direction direction, QTcpSocket * player)
     if(isFinished()){
         throw PentagoException("la partie est terminé !");
     }
-    if(player!=this->gameManager.getCurrentPlayer()->getPlayerIdentifier()){
+    if(player!=this->gameManager.getCurrentPlayer()->getPlayerSocket()){
         throw PentagoException("c'est à votre adversaire de jouer !");
     }
     if(nextAction!=ActionGame::ROTATE){

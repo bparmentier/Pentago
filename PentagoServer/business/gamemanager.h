@@ -13,33 +13,33 @@ private:
 public:
 
     /*!
-     * \brief constructeur du gestionnaire des joueurs de la partie
-     * \param players tableau des joueurs de la partie
+     * \brief constructor of the player manager class
+     * \param players arrays of players
      */
     GameManager(std::vector<Player> & players);
 
     /*!
-     * \brief permet d'obtenir le joueur courant de la partie
-     * \return le joueur courant
+     * \brief allow to get the current player of the game
+     * \return the current player
      */
     Player *getCurrentPlayer();
 
     /*!
-     * \brief permet de passer au joueur suivant de la partie
+     * \brief allow to pass to the next player of the game
      */
     void nextPlayer();
 
     /*!
-     * \brief permet d'obtenir le nom du joueur à la couleur
-     * \param color couleur du joueur qu'on désire
-     * \return le nom du joueur
+     * \brief allow to get the name of the player by his ball color
+     * \param color the color of the player that we want
+     * \return the name of the player
      */
     std::string getNamePlayerByColor(BallColor color);
 
     /*!
-     * \brief permet d'obtenir le socket du client lié à la couleur
-     * \param color couleur du joueur qu'on désire
-     * \return le socket
+     * \brief allow to get the socket of the player by his color
+     * \param color the color of the player that we want
+     * \return the socket of the player
      */
     QTcpSocket * getIdentifierPlayerByColor(BallColor color);
 };
