@@ -221,6 +221,7 @@ void PentagoGui::errorSocket(QAbstractSocket::SocketError error) // Ce slot est 
     case QAbstractSocket::RemoteHostClosedError:
         qDebug() <<"ERREUR : le serveur a coupé la connexion.";
         QMessageBox::information(this,"Server ended connection","The server ended the connection");
+        ui->actionClose->setDisabled(true);
         break;
     default:
         qDebug() <<"ERREUR : " << thisClient->errorString();
