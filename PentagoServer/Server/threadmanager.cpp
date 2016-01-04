@@ -3,7 +3,7 @@
 #include <vector>
 #include "business/pentagoexception.h"
 ThreadManager::ThreadManager(qintptr ID, qintptr ID2, QObject *parent) :
-    QThread(parent), game(nullptr),firstClientReady{false},secondClientReady{false},nextAction{Message::GameAction::PLACE_BALL}
+    QThread(parent), game(nullptr),firstClientReady{false},secondClientReady{false}
 {
     qDebug() << "new thread created";
 

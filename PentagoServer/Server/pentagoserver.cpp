@@ -28,7 +28,7 @@ void PentagoServer::stopServer()
     }
 }
 
-// This function is called by QTcpServer when a new connection is available.
+
 void PentagoServer::incomingConnection(qintptr socketDescriptor)
 {
     qDebug() << socketDescriptor << " Connecting...";

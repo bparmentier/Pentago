@@ -7,31 +7,58 @@
 #include "business/pentago.h"
 #include "message.h"
 #include "type.h"
-
+///
+/// \brief The ThreadManager class Manages a Pentago server thread and processes client requests
+///
 class ThreadManager : public QThread
 {
     Q_OBJECT
 private:
-    QTcpSocket * firstClientSocket;
-    QTcpSocket * secondClientSocket;
-    bool firstClientReady;
-    bool secondClientReady;
-    QTcpSocket * nextSocketPlayer; // joueur duquel on attend le mouvement, si pas lui on refuse de jouer le mouvement demandé !
-    Pentago * game;
-    quint16 lengthMessage;
-    Message::GameAction nextAction;
+    QTcpSocket * firstClientSocket;     /*!<  this first socket */
+    QTcpSocket * secondClientSocket;    /*!<  the second socket */
+    bool firstClientReady;              /*!<  Indicated if the first client is ready to play */
+    bool secondClientReady;             /*!<  Indicated if the second client is ready to play */
+    QTcpSocket * nextSocketPlayer;      /*!<  player's socket that is expected to make the next move */
+    Pentago * game;                     /*!<  a Pentago game instance */
+    quint16 lengthMessage;              /*!<  used to store the size of a packet to be sent on the network */
 
 public:
+    ///
+    /// \brief ThreadManager Constructs a new ThreadManager to manage a new thread containing two Sockets (client).
+    /// \param ID a connection descriptor identifier
+    /// \param ID2 a connection descriptor identifier
+    /// \param parent parent Object
+    ///
     explicit ThreadManager(qintptr ID, qintptr ID2, QObject *parent = 0);
+    ///
+    /// \brief run The starting point for the thread. After calling start(), the newly created thread calls this function.
+    ///
     void run();
+    ///
+    /// \brief closeConnections closes the sockets created by this thread
+    ///
     void closeConnections();
 
 signals:
+    ///
+    /// \brief error signal that is generated when an error occurs on a socket
+    /// \param socketerror the socket that generated the error
+    ///
     void error(QTcpSocket::SocketError socketerror);
 
 public slots:
+    ///
+    /// \brief readyReadFirstClient Slot is called when a packet from the first client is ready to be read
+    ///
+    ///
     void readyReadFirstClient();
+    ///
+    /// \brief readyReadSecondClient Slot is called when a packet from the second client is ready to be read
+    ///
     void readyReadSecondClient();
+    ///
+    /// \brief disconnected Slot that is called when a socket has closed unexpectedly
+    ///
     void disconnected();
 
 private:
