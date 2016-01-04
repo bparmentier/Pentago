@@ -3,8 +3,7 @@
 #include "qhole.h"
 #include "qball.h"
 
-QBoard::QBoard(QWidget *parent) :
-    QGraphicsScene{parent}
+QBoard::QBoard(QWidget *parent) : QGraphicsScene{parent}
 {
     pentagoGui = dynamic_cast<PentagoGui*>(parent);
     drawMiniBoard(TOP_LEFT, 0, 0);

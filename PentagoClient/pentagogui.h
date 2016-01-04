@@ -9,6 +9,7 @@
 #include "playercolor.h"
 
 class QBoard;
+
 namespace Ui {
 class PentagoGui;
 }
@@ -49,8 +50,6 @@ private:
     PlayerColor playerColor;
 
 private slots:
-    void onPlayRequest();
-    void onRotateRequest();
     void onConnectClicked();
     void connected();
     void readyRead();

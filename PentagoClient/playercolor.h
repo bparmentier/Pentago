@@ -9,7 +9,6 @@ enum class PlayerColor {
     NONE    /*!< Neither black, nor white player */
 };
 
-
 inline QDataStream &operator<<(QDataStream &flux, PlayerColor const& color)
 {
     switch(color){
@@ -40,7 +39,7 @@ inline void operator>>(QDataStream &flux, PlayerColor & color)
     case 3:
         color = PlayerColor::NONE;
         break;
-}
+    }
 }
 #endif // BALLCOLOR
 

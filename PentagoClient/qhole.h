@@ -4,10 +4,13 @@
 #include <QPainter>
 #include <QGraphicsEllipseItem>
 #include <QDebug>
+
 class QHole : public QGraphicsEllipseItem
 {
+
 private:
     bool black;
+
 public:
     enum {
         Type = UserType + 2
@@ -29,9 +32,6 @@ public:
      */
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                QWidget *widget);
-    void inline test(){
-        qDebug()<<"Ca marche";
-    }
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event);

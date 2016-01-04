@@ -1,12 +1,10 @@
 #include "pentagogui.h"
 #include "ui_pentagogui.h"
 #include "qhole.h"
-#include <QMessageBox>
 #include "serverconfdialog.h"
+#include <QMessageBox>
 
-PentagoGui::PentagoGui(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::PentagoGui)
+PentagoGui::PentagoGui(QWidget *parent) : QMainWindow(parent), ui(new Ui::PentagoGui)
 {
     ui->setupUi(this);
     ui->graphicsView->setHidden(true);
@@ -19,7 +17,6 @@ PentagoGui::PentagoGui(QWidget *parent) :
             this, &PentagoGui::onConnectClicked);
     connect(ui->actionQuit, &QAction::triggered,
             &QCoreApplication::quit);
-
     lengthMessage = 0;
     ui->graphicsView->setDisabled(true);
 }
@@ -46,16 +43,6 @@ void PentagoGui::rotate(int miniboard, bool clockwise)
     msg.setClockwiseRotation(clockwise);
     msg.setMiniBoardIndice(miniboard);
     sendMessageToServer(msg);
-}
-
-void PentagoGui::onPlayRequest()
-{
-    // traitement d'un placement de bille
-}
-
-void PentagoGui::onRotateRequest()
-{
-    // traitement d'une rotation d'un plateau
 }
 
 void PentagoGui::sendMessageToServer(Message messageToSend)
@@ -145,8 +132,7 @@ void PentagoGui::processTheMessage(Message messageFromServer)
         break;
     case TypeMessage::ERROR:
     {
-        QMessageBox::information(this, "Erreur",
-                                 messageFromServer.getError());
+        QMessageBox::information(this, "Erreur",messageFromServer.getError());
     }
         break;
     }
@@ -157,7 +143,7 @@ void PentagoGui::showStatusTip(const QString &message)
     statusBar()->showMessage(message);
 }
 
-void PentagoGui::onConnectClicked() // bouton du menu qui permet de lancer une partie et ainsi de se connecter au serveur?
+void PentagoGui::onConnectClicked()
 {
     ServerConfDialog cd{this};
     auto ret= cd.exec();
@@ -169,7 +155,7 @@ void PentagoGui::onConnectClicked() // bouton du menu qui permet de lancer une p
     }
 }
 
-void PentagoGui::connected() // Ce slot est appelé lorsque la connexion au serveur a réussi
+void PentagoGui::connected()
 {
     // lorsqu'on a réussi à se connecter ! initialiser l'interface ?
     board = new QBoard(this);
@@ -195,12 +181,10 @@ void PentagoGui::readyRead()
     lengthMessage = 0;
 }
 
-// Ce slot est appelé lorsqu'on est déconnecté du serveur
 void PentagoGui::disconnected()
 {
     // ce qu'il faut faire quand le server nous deconnecte. Normalement en fin de partie
 }
-
 
 void PentagoGui::errorSocket(QAbstractSocket::SocketError error) // Ce slot est appelé lorsqu'il y a une erreur
 {

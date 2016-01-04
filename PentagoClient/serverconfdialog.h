@@ -11,6 +11,9 @@ class ServerConfDialog : public QDialog
 {
     Q_OBJECT
 
+private:
+    Ui::ServerConfDialog *ui;
+
 public:
     /*!
      * \brief Constructs a dialog asking for a server address and port
@@ -31,9 +34,6 @@ public:
      * \return the entered server port
      */
     QString getServerPort() const;
-
-private:
-    Ui::ServerConfDialog *ui;
 };
 
 #endif // SERVERCONFDIALOG_H

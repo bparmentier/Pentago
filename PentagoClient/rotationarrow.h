@@ -5,10 +5,12 @@
 
 class RotationArrow : public QGraphicsPixmapItem
 {
+
 private:
     int miniboard;
     Direction dir;
     QPixmap * pixmap;
+
 public:
     enum {
         Type = UserType + 3

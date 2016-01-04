@@ -120,31 +120,31 @@ inline void operator>>( QDataStream &flux, Message & msg)
     msg = Message(type);
     switch (type) {
     case TypeMessage::READY:
-        {
-            PlayerColor color;
-            flux >> color;
-            msg.setPlayerColor(color);
-        }
+    {
+        PlayerColor color;
+        flux >> color;
+        msg.setPlayerColor(color);
+    }
         break;
     case TypeMessage::PLAYER_TURN:
-        {
-            PlayerColor color;
-            Message::GameAction action;
-            QVector<QVector<PlayerColor>> board;
-            flux >> color;
-            flux >> action;
-            flux >> board;
-            msg.setPlayerColor(color);
-            msg.setGameAction(action);
-            msg.setBoard(board);
-        }
+    {
+        PlayerColor color;
+        Message::GameAction action;
+        QVector<QVector<PlayerColor>> board;
+        flux >> color;
+        flux >> action;
+        flux >> board;
+        msg.setPlayerColor(color);
+        msg.setGameAction(action);
+        msg.setBoard(board);
+    }
         break;
     case TypeMessage::BOARD_UPDATE:
-        {
-            QVector<QVector<PlayerColor>> board;
-            flux >> board;
-            msg.setBoard(board);
-        }
+    {
+        QVector<QVector<PlayerColor>> board;
+        flux >> board;
+        msg.setBoard(board);
+    }
         break;
     case TypeMessage::PLAY:
         int line, column;
@@ -161,14 +161,14 @@ inline void operator>>( QDataStream &flux, Message & msg)
         msg.setClockwiseRotation(isClockwiseRotation);
         break;
     case TypeMessage::FINISHED:
-        {
-            PlayerColor color;
-            QVector<QVector<PlayerColor>> board;
-            flux >> color;
-            flux >> board;
-            msg.setPlayerColor(color);
-            msg.setBoard(board);
-        }
+    {
+        PlayerColor color;
+        QVector<QVector<PlayerColor>> board;
+        flux >> color;
+        flux >> board;
+        msg.setPlayerColor(color);
+        msg.setBoard(board);
+    }
         break;
     case TypeMessage::ERROR:
         QString error;

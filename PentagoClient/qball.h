@@ -7,6 +7,9 @@
 
 class QBall : public QGraphicsEllipseItem
 {
+private:
+    QBallColor ballColor;
+
 public:
     enum {
         Type = UserType + 1
@@ -29,9 +32,6 @@ public:
      */
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                QWidget *widget);
-
-private:
-    QBallColor ballColor;
 };
 
 #endif // QBALL_H
