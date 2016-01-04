@@ -13,8 +13,15 @@ public:
         Type = UserType + 2
     };
 
+    /*!
+     * \brief Constructs a QHole
+     */
     QHole();
 
+    /*!
+     * \brief Returns the custom type of the item
+     * \return the custom type of the item
+     */
     int type() const;
 
     /*!

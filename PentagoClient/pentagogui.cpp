@@ -31,11 +31,11 @@ PentagoGui::~PentagoGui()
     delete ui;
 }
 
-void PentagoGui::play(int x, int y)
+void PentagoGui::play(int line, int column)
 {
     Message msg(TypeMessage::PLAY);
-    msg.setLine(x);
-    msg.setColumn(y);
+    msg.setLine(line);
+    msg.setColumn(column);
     sendMessageToServer(msg);
 }
 
