@@ -24,6 +24,7 @@ PentagoGui::PentagoGui(QWidget *parent) :
             &QCoreApplication::quit);
     lengthMessage = 0;
     ui->graphicsView->setDisabled(true);
+    ui->actionClose->setDisabled(true);
 }
 
 PentagoGui::~PentagoGui()
@@ -68,6 +69,7 @@ void PentagoGui::processTheMessage(Message messageFromServer)
     switch (messageFromServer.getType()) {
     case TypeMessage::READY:
     {
+        ui->actionClose->setDisabled(false);
         playerColor = messageFromServer.getPlayerColor();
         qDebug() << "Message reçu";
         if (playerColor == PlayerColor::BLACK){
@@ -170,6 +172,7 @@ void PentagoGui::onCloseClicked()
         thisClient->close();
         ui->graphicsView->setHidden(true);
     }
+    ui->actionClose->setDisabled(true);
 }
 
 void PentagoGui::connected()
