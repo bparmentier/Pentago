@@ -2,7 +2,7 @@
 #include "pentagoserver.h"
 
 PentagoServer::PentagoServer(QObject *parent) :
-    QTcpServer(parent)
+    QTcpServer(parent),thread{nullptr}
 {
 }
 
@@ -21,9 +21,14 @@ void PentagoServer::startServer(int port)
 
 void PentagoServer::stopServer()
 {
-    if(isListening()){
-        thread->closeConnections();
+    if(isListening() ){
+        if(thread)
+            thread->closeConnections();
         close();
+        if(thread != nullptr){
+            delete thread;
+            thread = nullptr;
+        }
         qDebug()<<"Server Stopped";
     }
 }

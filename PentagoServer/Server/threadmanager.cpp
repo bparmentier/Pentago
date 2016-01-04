@@ -55,8 +55,8 @@ void ThreadManager::run()
 
 void ThreadManager::closeConnections()
 {
-    if(firstClientSocket->isOpen())firstClientSocket->close();
-    if(secondClientSocket->isOpen()) secondClientSocket->close();
+    if(firstClientSocket  && firstClientSocket->isOpen())firstClientSocket->close();
+    if(secondClientSocket && secondClientSocket->isOpen()) secondClientSocket->close();
 }
 
 void ThreadManager::readyReadFirstClient()
@@ -132,8 +132,10 @@ void ThreadManager::processTheRequest(Message message,QTcpSocket * socket)
 
 void ThreadManager::disconnected() // probleme lors de la deconnexion d'un client, envoie à l'autre client qu'il a gagné par forfait puis le deconnecter? :/
 {
+    qDebug()<<"Client deconnecté";
     if(firstClientSocket != nullptr){
         firstClientSocket->deleteLater();
+        qDebug()<<"client null";
         firstClientSocket = nullptr;
     }
     if(secondClientSocket != nullptr){
@@ -144,7 +146,6 @@ void ThreadManager::disconnected() // probleme lors de la deconnexion d'un clien
         delete game;
         game = nullptr;
     }
-    this->exit(0);
 }
 
 void ThreadManager::sendResponseOfServer(const Message & message)
