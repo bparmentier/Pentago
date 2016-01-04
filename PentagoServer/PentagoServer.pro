@@ -22,7 +22,6 @@ SOURCES += main.cpp \
     business/pentago.cpp \
     business/pentagoexception.cpp \
     business/player.cpp \
-    o_sdo/sujetdobservation.cpp \
     Server/message.cpp \
     Server/pentagoserver.cpp \
     Server/threadmanager.cpp \
@@ -38,8 +37,6 @@ HEADERS  += \
     business/pentago.h \
     business/pentagoexception.h \
     business/player.h \
-    o_sdo/observateur.h \
-    o_sdo/sujetdobservation.h \
     Server/message.h \
     Server/pentagoserver.h \
     Server/type.h \
