@@ -1,14 +1,16 @@
 #ifndef BALLCOLOR
 #define BALLCOLOR
 
+#include <QDataStream>
+
 enum class PlayerColor {
-    WHITE,    /*!< Couleur bille blanche */
-    BLACK,       /*!< Couleur bille noir */
-    NONE        /*!< Bille trou vide */
+    WHITE,  /*!< White player */
+    BLACK,  /*!< Black player */
+    NONE    /*!< Neither black, nor white player */
 };
 
 
-inline QDataStream &operator<<( QDataStream &flux, PlayerColor const& color)
+inline QDataStream &operator<<(QDataStream &flux, PlayerColor const& color)
 {
     switch(color){
     case PlayerColor::WHITE:
@@ -24,7 +26,7 @@ inline QDataStream &operator<<( QDataStream &flux, PlayerColor const& color)
     return flux;
 }
 
-inline void operator>>( QDataStream &flux, PlayerColor & color)
+inline void operator>>(QDataStream &flux, PlayerColor & color)
 {
     int number;
     flux >> number;

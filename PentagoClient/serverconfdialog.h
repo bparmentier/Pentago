@@ -12,10 +12,25 @@ class ServerConfDialog : public QDialog
     Q_OBJECT
 
 public:
+    /*!
+     * \brief Constructs a dialog asking for a server address and port
+     * \param parent the parent widget
+     */
     explicit ServerConfDialog(QWidget *parent = 0);
+
     ~ServerConfDialog();
-    QString getServerAdress()const;
-    QString getServerPort()const;
+
+    /*!
+     * \brief Returns the entered server address
+     * \return the entered server address
+     */
+    QString getServerAdress() const;
+
+    /*!
+     * \brief Returns the entered server port
+     * \return the entered server port
+     */
+    QString getServerPort() const;
 
 private:
     Ui::ServerConfDialog *ui;

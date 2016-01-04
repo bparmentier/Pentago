@@ -2,8 +2,8 @@
 #define DIRECTION
 
 enum class Direction {
-    CLOCKWISE,    /*!< direction pour tourner le mini plateau */
-    COUNTERCLOCKWISE      /*!< direction pour tourner le mini plateau */
+    CLOCKWISE,    /*!< direction of rotation of mini-board */
+    COUNTERCLOCKWISE      /*!< direction of rotation of mini-board */
 };
 
 #endif // DIRECTION

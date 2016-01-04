@@ -22,19 +22,19 @@ private:
 public:
 
     /*!
-     * \brief   Constructeur de la classe avec paramètre
-     * \param   message     le message d'info sur l'erreur survenue
+     * \brief   constructor of PentagoException
+     * \param   message     the message of the exception
      */
     PentagoException(std::string message)throw();
 
     /*!
-     * \brief   Méthode de la classe permettant de renvoyer le message d'erreur
-     * \return  Le message d'erreur
+     * \brief   allow to get the message of the exception
+     * \return  the message
      */
     virtual const char* what() const throw();
 
     /*!
-     * \brief   Destructeur de la classe
+     * \brief   destructor of the class
      */
     virtual ~PentagoException() throw();
 

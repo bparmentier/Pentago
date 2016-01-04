@@ -15,37 +15,37 @@ private:
 public:
 
     /*!
-     * \brief constructeur d'un trou du plateau
+     * \brief constructor of hole class
      */
     Hole();
 
     /*!
-     * \brief permet de placer une bille dans le trou
-     * \param bille la bille à y placer
+     * \brief allow to place a ball into a hole
+     * \param ball the ball to place
      */
     void setBall(Ball bille);
 
     /*!
-     * \brief permet d'indiquer le joueur qui a joué sur ce trou
-     * \param player le joueur
+     * \brief allow to set the player who played on the hole
+     * \param player the player
      */
     void setPlayer(Player * player);
 
     /*!
-     * \brief permet d'obtenir la bille d'un trou
-     * \return la bille du trou
+     * \brief allow to get the ball of a hole
+     * \return the ball of the hole
      */
     Ball getBall() const;
 
     /*!
-     * \brief permet d'obtenir le joueur du trou
-     * \return le joueur du trou
+     * \brief allow to get the player who played on the hole
+     * \return the player
      */
     Player * getPlayer()const;
 
     /*!
-     * \brief permet de savoir si un trou est occupé
-     * \return true si le trou est occupé false si non
+     * \brief allow to know if a hole is occupied
+     * \return true if the hole is occupied false if not
      */
     bool isOccupied() const;
 
@@ -53,9 +53,9 @@ public:
 
 /*!
  * \brief operator ==
- * \param a le premier trou
- * \param b le deuxièmme trou
- * \return true si les trou ont les mêmes caractéristiques false si non
+ * \param a the first hole
+ * \param b the second hole
+ * \return true if the two hole are the same false if not
  */
 bool operator==(Hole const& a, Hole const& b);
 

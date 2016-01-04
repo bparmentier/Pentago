@@ -18,10 +18,28 @@ class PentagoGui : public QMainWindow
     Q_OBJECT
 
 public:
+    /*!
+     * \brief Constructs a Pentago window
+     * \param parent the parent widget
+     */
     explicit PentagoGui(QWidget *parent = 0);
+
     ~PentagoGui();
-    void play(int x,int y);
-    void rotate(int miniboard,bool clockwise);
+
+    /*!
+     * \brief Sends a PLAY message to the server with the given coordinates
+     * \param line the line
+     * \param column the column
+     */
+    void play(int line, int column);
+
+    /*!
+     * \brief Sends a ROTATE message to the server with the given mini-board id
+     * and rotation direction
+     * \param miniboard the miniboard id
+     * \param clockwise true if a clockwise rotation, false otherwise
+     */
+    void rotate(int miniboard, bool clockwise);
 
 private:
     Ui::PentagoGui * ui;

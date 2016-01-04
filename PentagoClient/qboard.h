@@ -31,9 +31,28 @@ protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
 
 public:
+    /*!
+     * \brief Constructs a QBoard and draw four mini-boards
+     * \param parent the parent widget
+     */
     QBoard(QWidget *parent = 0);
+
+    /*!
+     * \brief Sets the color of the played balls
+     * \param color the color of the played balls
+     */
     void setColor(QBallColor color);
+
+    /*!
+     * \brief Updates the board with the given board
+     * \param board the board of PlayerColor to update
+     */
     void updateBoard(QVector<QVector<PlayerColor> > board);
+
+    /*!
+     * \brief Shows arrows in the corner of each mini-board to allow its
+     * rotation
+     */
     void readyrotate();
 };
 

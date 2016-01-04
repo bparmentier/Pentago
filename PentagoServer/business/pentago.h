@@ -9,7 +9,7 @@
 class Pentago
 {
 
-public:
+private:
     GameManager gameManager;
     Board board;
     ActionGame nextAction;
@@ -18,76 +18,76 @@ public:
 public:
 
     /*!
-     * \brief Constructeur du jeu pentago
-     * \param players le tableau des joueurs qui vont y jouer
+     * \brief constructor of the game pentago
+     * \param players arrays of the players
      */
     Pentago(std::vector<Player> & players);
 
     /*!
-     * \brief permet de joueur une bille sur le plateau
-     * \param x la ligne choisie
-     * \param y la colonne choisie
-     * \throw PentagoException si la partie est terminé
+     * \brief allow to play a ball on the board game
+     * \param x the row choosed
+     * \param y the column choosed
+     * \throw PentagoException if the game is finish
      */
     void play(int x, int y, QTcpSocket *player);
 
     /*!
-     * \brief permet d'éffectuer la rotation d'un mini-plateau
-     * \param miniBoard numéro du mini-plateau
-     * \param direction la direction de la rotation
-     * \throw PentagoException si la partie est terminé ou que le
-     * numéro du mini-plateau est invalide
+     * \brief allow to make the rotation of a mini-board
+     * \param miniBoard number of the mini-board
+     * \param direction direction of the rotation
+     * \throw PentagoException si the game is finish or the number of
+     * the mini-board is invalid
      */
     void rotate(int miniBoard, Direction direction, QTcpSocket * player);
 
     /*!
-     * \brief permet de savoir si une partie est fini
-     * \return true si elle est fini false si non
+     * \brief allow to know if a game is finish
+     * \return true if it's finish false if not
      */
     bool isFinished() const;
 
     /*!
-     * \brief permet de savoir si une partie s'est fini par une égalité
-     * \return true si c'est égalité false si non
+     * \brief allow to know if a game has finished by a draw
+     * \return true if it's a draw false if not
      */
     bool resultatEgalite() const;
 
     /*!
-     * \brief permet d'obtenir le nom du joueur gagnant
-     * \return le nom du joueur
-     * \throw PentagoException si la partie n'est pas terminée
+     * \brief allow to get the name of the winner
+     * \return the name of the winner
+     * \throw PentagoException if the game is finish
      */
     std::string getWinnerName();
 
     /*!
-     * \brief permet d'obtenir la couleur des billes du joueur gagnant
-     * \return la couleur des billes du joueur gagnant
-     * \throw PentagoException si la partie n'est pas terminée
+     * \brief allow to get the color of the ball of the winner
+     * \return the color of the winner
+     * \throw PentagoException if the game is not finish
      */
     BallColor getWinnerBallColor();
 
     /*!
-     * \brief permet d'obtenir le socket du joueur gagnant
-     * \return le socket du joueur
-     * \throw PentagoException si la partie n'est pas terminée
+     * \brief allow to get the socket of the winner
+     * \return the socket of the winner
+     * \throw PentagoException if the game is finish
      */
     QTcpSocket *getWinnerSocket();
 
     /*!
-     * \brief permet d'obtenir le nom du joueur courant de la partie
-     * \return le nom du joueur courant
+     * \brief allow to get the name of the current player
+     * \return the name of the current player
      */
     std::string getCurrentPlayerName();
 
     /*!
-     * \brief permet d'obtenir la couleur des billes du joueur courant
-     * \return la couleur des billes du joueur courant
+     * \brief allow to get the color of the ball of the current player
+     * \return the color of the ball
      */
     BallColor getCurrentPLayerBallColor();
 
     /*!
-     * \brief permet d'obtenir le plateau du jeu
-     * \return le plateau du jeu
+     * \brief allow to get the board of the game
+     * \return the board of the game
      */
     std::vector<std::vector<Hole>> getBoard() const;
 

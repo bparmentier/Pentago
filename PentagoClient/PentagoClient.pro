@@ -17,7 +17,6 @@ CONFIG += console c++11
 SOURCES += main.cpp\
         pentagogui.cpp \
     message.cpp \
-    o_sdo/sujetdobservation.cpp \
     qboard.cpp \
     qhole.cpp \
     qball.cpp \
@@ -27,8 +26,6 @@ SOURCES += main.cpp\
 HEADERS  += pentagogui.h \
     message.h \
     type.h \
-    o_sdo/observateur.h \
-    o_sdo/sujetdobservation.h \
     qboard.h \
     qhole.h \
     qball.h \

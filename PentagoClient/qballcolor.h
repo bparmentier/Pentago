@@ -4,8 +4,8 @@
 
 enum class QBallColor
 {
-    BLACK,
-    WHITE
+    BLACK,  /*!< Black ball color */
+    WHITE   /*!< White ball color */
 };
 
 #endif // QBALLCOLOR_H
