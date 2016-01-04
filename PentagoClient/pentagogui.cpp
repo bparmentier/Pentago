@@ -4,7 +4,10 @@
 #include "serverconfdialog.h"
 #include <QMessageBox>
 
-PentagoGui::PentagoGui(QWidget *parent) : QMainWindow(parent), ui(new Ui::PentagoGui)
+PentagoGui::PentagoGui(QWidget *parent) :
+    QMainWindow(parent),
+    ui(new Ui::PentagoGui),
+    board(nullptr)
 {
     ui->setupUi(this);
     ui->graphicsView->setHidden(true);
@@ -15,6 +18,8 @@ PentagoGui::PentagoGui(QWidget *parent) : QMainWindow(parent), ui(new Ui::Pentag
     connect(thisClient, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(errorSocket(QAbstractSocket::SocketError)));
     connect(ui->actionConnect, &QAction::triggered,
             this, &PentagoGui::onConnectClicked);
+    connect(ui->actionClose, &QAction::triggered,
+            this, &PentagoGui::onCloseClicked);
     connect(ui->actionQuit, &QAction::triggered,
             &QCoreApplication::quit);
     lengthMessage = 0;
@@ -147,11 +152,23 @@ void PentagoGui::onConnectClicked()
 {
     ServerConfDialog cd{this};
     auto ret= cd.exec();
-    if(ret && !cd.getServerAdress().isEmpty() && !cd.getServerPort().isEmpty() && cd.getServerPort().toUInt() != 0){
+    if (ret && !cd.getServerAdress().isEmpty()
+            && !cd.getServerPort().isEmpty()
+            && cd.getServerPort().toUInt() != 0) {
         thisClient->abort();
-        thisClient->connectToHost(cd.getServerAdress(),cd.getServerPort().toUInt());
-    }else if (ret){
+        thisClient->connectToHost(cd.getServerAdress(),
+                                  cd.getServerPort().toUInt());
+    } else if (ret) {
         QMessageBox::information(this,"Incorrect Parameters ","The parameters you entered are incorrect :\nPlease check the IP address and port number");
+    }
+}
+
+void PentagoGui::onCloseClicked()
+{
+    if (board != nullptr) {
+        delete board;
+        thisClient->close();
+        ui->graphicsView->setHidden(true);
     }
 }
 

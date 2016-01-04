@@ -51,6 +51,7 @@ private:
 
 private slots:
     void onConnectClicked();
+    void onCloseClicked();
     void connected();
     void readyRead();
     void disconnected();
