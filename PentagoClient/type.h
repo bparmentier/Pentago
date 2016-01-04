@@ -3,16 +3,25 @@
 
 #include <QDataStream>
 
+/*!
+ * brief The TypeMessage enum Defines the type of a message
+ */
 enum class TypeMessage {
-    READY,
-    PLAYER_TURN,
-    BOARD_UPDATE,
-    PLAY,
-    ROTATE,
-    FINISHED,
-    ERROR
+    READY,                  /*!< To indicate that the server is ready to process user requests */
+    PLAYER_TURN,            /*!< To indicate who will play next */
+    BOARD_UPDATE,           /*!< To indicate that the message contains a board update */
+    PLAY,                   /*!< To indicate that the message contains an action to place a ball */
+    ROTATE,                 /*!< To indicate that the message contains a request to rotate a quadrant */
+    FINISHED,               /*!< To indicate to the clients that the game is over */
+    ERROR                   /*!< To indicate that a request from a client has resulted in an error */
 };
 
+/*!
+ * \brief operator << Injects a TypeMessage into a QDataStream
+ * \param flux the output object
+ * \param type the input TypeMessage object
+ * \return
+ */
 inline QDataStream &operator<<( QDataStream &flux, TypeMessage const& type)
 {
     switch (type) {
@@ -41,6 +50,11 @@ inline QDataStream &operator<<( QDataStream &flux, TypeMessage const& type)
     return flux;
 }
 
+/*!
+ * \brief operator >> Unboxes a QDataStream into a TypeMessage
+ * \param flux the input object
+ * \param type the output object
+ */
 inline void operator>>( QDataStream &flux, TypeMessage & type)
 {
     int number;
