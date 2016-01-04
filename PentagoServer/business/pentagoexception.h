@@ -1,8 +1,3 @@
-/*!
- * \file pentagoexception.h
- * \brief Définition de la classe PentagoException.
- */
-
 #ifndef PENTAGOEXCEPTION_H
 #define PENTAGOEXCEPTION_H
 

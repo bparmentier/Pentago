@@ -33,21 +33,6 @@ vector<vector<Hole> > Board::getBoard() const
     return board;
 }
 
-BallColor Board::getColor(int x, int y) const
-{
-    return board[x][y].getBall().getColor();
-}
-
-Player * Board::getJoueurTrou(int x, int y) const
-{
-    return board[x][y].getPlayer();
-}
-
-bool Board::isHoleOccupied(int x, int y) const
-{
-    return board[x][y].isOccupied();
-}
-
 bool Board::checkSequencePentago(int x, int y)
 {
     bool fiveSequence = pentagoVertical(x,y) || pentagoHorizontal(x,y)

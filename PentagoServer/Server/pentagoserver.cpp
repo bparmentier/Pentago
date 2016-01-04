@@ -1,8 +1,7 @@
 #include "threadmanager.h"
 #include "pentagoserver.h"
 
-PentagoServer::PentagoServer(QObject *parent) :
-    QTcpServer(parent),thread{nullptr}
+PentagoServer::PentagoServer(QObject *parent) : QTcpServer(parent),thread{nullptr}
 {
 }
 

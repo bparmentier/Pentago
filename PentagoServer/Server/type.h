@@ -2,9 +2,10 @@
 #define TYPE_H
 
 #include <QDataStream>
-///
-/// \brief The TypeMessage enum Defines the type of a message
-///
+
+/*!
+ * brief The TypeMessage enum Defines the type of a message
+ */
 enum class TypeMessage {
     READY,                  /*!< To indicate that the server is ready to process user requests */
     PLAYER_TURN,            /*!< To indicate who will play next */
@@ -15,12 +16,12 @@ enum class TypeMessage {
     ERROR                   /*!< To indicate that a request from a client has resulted in an error */
 };
 
-///
-/// \brief operator << Injects a TypeMessage into a QDataStream
-/// \param flux the output object
-/// \param type the input TypeMessage object
-/// \return
-///
+/*!
+ * \brief operator << Injects a TypeMessage into a QDataStream
+ * \param flux the output object
+ * \param type the input TypeMessage object
+ * \return
+ */
 inline QDataStream &operator<<( QDataStream &flux, TypeMessage const& type)
 {
     switch (type) {
@@ -48,11 +49,12 @@ inline QDataStream &operator<<( QDataStream &flux, TypeMessage const& type)
     }
     return flux;
 }
-///
-/// \brief operator >> Unboxes a QDataStream into a TypeMessage
-/// \param flux the input object
-/// \param type the output object
-///
+
+/*!
+ * \brief operator >> Unboxes a QDataStream into a TypeMessage
+ * \param flux the input object
+ * \param type the output object
+ */
 inline void operator>>( QDataStream &flux, TypeMessage & type)
 {
     int number;

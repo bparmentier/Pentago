@@ -2,11 +2,11 @@
 #include <QtNetwork>
 #include <vector>
 #include "business/pentagoexception.h"
+
 ThreadManager::ThreadManager(qintptr ID, qintptr ID2, QObject *parent) :
     QThread(parent), game(nullptr),firstClientReady{false},secondClientReady{false}
 {
     qDebug() << "new thread created";
-
     std::vector<Player> players;
 
     /* First client */
@@ -27,7 +27,6 @@ ThreadManager::ThreadManager(qintptr ID, qintptr ID2, QObject *parent) :
     connect(secondClientSocket, SIGNAL(readyRead()), this, SLOT(readyReadSecondClient()), Qt::DirectConnection);
     connect(secondClientSocket, SIGNAL(disconnected()), this, SLOT(disconnected()));
 
-    this->nextSocketPlayer = firstClientSocket;
     this->lengthMessage = 0;
 
     players.push_back(Player("player1", BallColor::BLACK, this->firstClientSocket));
@@ -115,9 +114,9 @@ void ThreadManager::processTheRequest(Message message,QTcpSocket * socket)
         qDebug() << "ROTATE action received";
         try {
             game->rotate(message.getMiniBoardIndice(),
-                     message.isClockwiseRotation() ?
-                         Direction::CLOCKWISE : Direction::COUNTERCLOCKWISE,
-                     socket);
+                         message.isClockwiseRotation() ?
+                             Direction::CLOCKWISE : Direction::COUNTERCLOCKWISE,
+                         socket);
             if (game->isFinished()) {
                 sendEndGameMessage();
             } else {
@@ -165,16 +164,6 @@ void ThreadManager::sendResponseOfServer(const Message & message,QTcpSocket *soc
     out << (quint16) (packet.size() - sizeof(quint16));
 
     socket->write(packet);
-}
-
-void ThreadManager::sendBoardToClients(){
-
-    std::vector<std::vector<Hole>> tmp {game->getBoard()};
-    QVector<QVector<PlayerColor>> vec = Message::convertBoard(tmp);
-    Message msg(TypeMessage::BOARD_UPDATE);
-    msg.setBoard(vec);
-    sendResponseOfServer(msg);
-
 }
 
 void ThreadManager::sendPlaceBallRequest()

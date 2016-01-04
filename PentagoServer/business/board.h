@@ -43,30 +43,6 @@ public:
     std::vector<std::vector<Hole>> getBoard() const;
 
     /*!
-     * \brief allow to get the color of the ball in the position choosed
-     * \param x the row choosed
-     * \param y the column choosed
-     * \return the color of the ball
-     */
-    BallColor getColor(int x, int y) const;
-
-    /*!
-     * \brief allow to get the player who played on a hole
-     * \param x the row choosed
-     * \param y the column choosed
-     * \return the player
-     */
-    Player * getJoueurTrou(int x, int y) const;
-
-    /*!
-     * \brief allow to know if a hole is occuppied
-     * \param x the row choosed
-     * \param y the column choosed
-     * \return true if it's occupied false if not
-     */
-    bool isHoleOccupied(int x, int y) const;
-
-    /*!
      * \brief allow to check if there is a pentago after a ball placement
      * \param x the row where the ball has been played
      * \param y the column where the ball has been played

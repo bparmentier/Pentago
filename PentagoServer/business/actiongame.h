@@ -2,8 +2,8 @@
 #define ACTIONGAME
 
 enum class ActionGame {
-    PLAY,    /*!< direction pour la rotation */
-    ROTATE      /*!< direction pour la rotation */
+    PLAY,    /*!< direction for rotation */
+    ROTATE      /*!< direction for rotation */
 };
 
 #endif // ACTIONGAME

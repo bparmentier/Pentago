@@ -71,7 +71,7 @@ public:
      * \return the socket of the winner
      * \throw PentagoException if the game is finish
      */
-    QTcpSocket *getWinnerSocket();
+    QTcpSocket * getWinnerSocket();
 
     /*!
      * \brief allow to get the name of the current player
