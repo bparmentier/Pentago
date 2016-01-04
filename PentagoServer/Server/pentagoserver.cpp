@@ -6,9 +6,9 @@ PentagoServer::PentagoServer(QObject *parent) :
 {
 }
 
-void PentagoServer::startServer()
+void PentagoServer::startServer(int port)
 {
-    int port = 50885;
+    if (port == 0) port = 50885;
     if(!this->listen(QHostAddress::Any, port))
     {
         qDebug() << "Could not start server";
@@ -16,6 +16,14 @@ void PentagoServer::startServer()
     else
     {
         qDebug() << "Server Started, listening to port " << port << "...";
+    }
+}
+
+void PentagoServer::stopServer()
+{
+    if(isListening()){
+        close();
+        qDebug()<<"Server Stopped";
     }
 }
 

@@ -10,7 +10,6 @@ PentagoGui::PentagoGui(QWidget *parent) :
 {
     ui->setupUi(this);
     ui->graphicsView->setHidden(true);
-    qApp->installEventFilter(this);
     thisClient = new QTcpSocket(this);
     turn = false;
     connect(thisClient, SIGNAL(readyRead()), this, SLOT(readyRead()));

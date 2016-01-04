@@ -25,7 +25,8 @@ SOURCES += main.cpp \
     o_sdo/sujetdobservation.cpp \
     Server/message.cpp \
     Server/pentagoserver.cpp \
-    Server/threadmanager.cpp
+    Server/threadmanager.cpp \
+    Server/dialog.cpp
 
 HEADERS  += \
     business/ball.h \
@@ -44,5 +45,9 @@ HEADERS  += \
     Server/type.h \
     Server/threadmanager.h \
     Server/playercolor.h \
-    business/actiongame.h
+    business/actiongame.h \
+    Server/dialog.h
+
+FORMS += \
+    Server/dialog.ui
 

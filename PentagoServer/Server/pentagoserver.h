@@ -9,7 +9,8 @@ class PentagoServer : public QTcpServer
     QList<qintptr> descriptorList;
 public:
     explicit PentagoServer(QObject *parent = 0);
-    void startServer();
+    void startServer(int port);
+    void stopServer();
 
 signals:
 
