@@ -173,6 +173,7 @@ void PentagoGui::onCloseClicked()
         ui->graphicsView->setHidden(true);
     }
     ui->actionClose->setDisabled(true);
+    ui->actionConnect->setEnabled(true);
 }
 
 void PentagoGui::connected()
@@ -181,6 +182,7 @@ void PentagoGui::connected()
     board = new QBoard(this);
     ui->graphicsView->setHidden(false);
     ui->graphicsView->setScene(board);
+    ui->actionConnect->setDisabled(true);
 
 }
 
@@ -222,6 +224,7 @@ void PentagoGui::errorSocket(QAbstractSocket::SocketError error) // Ce slot est 
         qDebug() <<"ERREUR : le serveur a coupé la connexion.";
         QMessageBox::information(this,"Server ended connection","The server ended the connection");
         ui->actionClose->setDisabled(true);
+        ui->actionConnect->setEnabled(true);
         break;
     default:
         qDebug() <<"ERREUR : " << thisClient->errorString();
