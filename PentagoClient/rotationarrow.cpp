@@ -4,7 +4,6 @@
 RotationArrow::RotationArrow(int aMiniBoard, Direction aDirection):
     miniboard{aMiniBoard},dir{aDirection}
 {
-    setAcceptHoverEvents(true);
     switch(dir){
     case Direction::CLOCKWISE:
         pixmap = new QPixmap(":/ressources/ArrowRight.png");
@@ -30,14 +29,4 @@ int RotationArrow::getMiniBoard()
 Direction RotationArrow::getDirection()
 {
     return dir;
-}
-
-void RotationArrow::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
-{
-    QApplication::setOverrideCursor(Qt::PointingHandCursor);
-}
-
-void RotationArrow::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
-{
-    QApplication::restoreOverrideCursor();
 }

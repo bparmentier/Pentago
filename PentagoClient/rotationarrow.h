@@ -18,9 +18,6 @@ public:
     int type() const;
     int getMiniBoard();
     Direction getDirection();
-protected:
-    void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
-    void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
 };
 
 #endif // ROTATIONARROW_H

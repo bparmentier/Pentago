@@ -163,9 +163,10 @@ void QBoard::readyrotate()
     arrows.push_back(mini3CW);
     arrows.push_back(mini3CCW);
 
-    for(auto e:arrows) addItem(e);
-
-
+    for (RotationArrow *arrow : arrows) {
+        addItem(arrow);
+        arrow->setCursor(Qt::PointingHandCursor);
+    }
 }
 
 void QBoard::mousePressEvent(QGraphicsSceneMouseEvent *event)
