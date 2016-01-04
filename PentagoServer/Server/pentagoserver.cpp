@@ -1,7 +1,7 @@
 #include "threadmanager.h"
 #include "pentagoserver.h"
 
-PentagoServer::PentagoServer(QObject *parent) : QTcpServer(parent),thread{nullptr}
+PentagoServer::PentagoServer(QObject *parent) : QTcpServer(parent)
 {
 }
 
@@ -20,17 +20,16 @@ void PentagoServer::startServer(int port)
 
 void PentagoServer::stopServer()
 {
-    if(isListening() ){
-        if(thread)
-            thread->closeConnections();
-        close();
-        if(thread != nullptr){
-            delete thread;
-            thread = nullptr;
+    close();
+    for(auto e : threads){
+        if(e){
+            e->closeConnections();
         }
-        qDebug()<<"Server Stopped";
     }
+    threads.clear();
+    qDebug()<<"Server Stopped";
 }
+
 
 
 void PentagoServer::incomingConnection(qintptr socketDescriptor)
@@ -38,8 +37,8 @@ void PentagoServer::incomingConnection(qintptr socketDescriptor)
     qDebug() << socketDescriptor << " Connecting...";
     this->descriptorList << socketDescriptor;
     if(descriptorList.size() == 2){
-        thread = new ThreadManager(descriptorList.at(0), descriptorList.at(1), this);
-
+        ThreadManager *thread = new ThreadManager(descriptorList.at(0), descriptorList.at(1), this);
+        threads.push_back(thread);
         this->descriptorList.clear();
         // connect signal/slot. Once a thread is not needed, it will be beleted later
         connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
