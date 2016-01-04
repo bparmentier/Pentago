@@ -24,6 +24,7 @@ private:
 public:
     explicit ThreadManager(qintptr ID, qintptr ID2, QObject *parent = 0);
     void run();
+    void closeConnections();
 
 signals:
     void error(QTcpSocket::SocketError socketerror);

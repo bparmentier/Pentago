@@ -22,6 +22,7 @@ void PentagoServer::startServer(int port)
 void PentagoServer::stopServer()
 {
     if(isListening()){
+        thread->closeConnections();
         close();
         qDebug()<<"Server Stopped";
     }
@@ -33,7 +34,7 @@ void PentagoServer::incomingConnection(qintptr socketDescriptor)
     qDebug() << socketDescriptor << " Connecting...";
     this->descriptorList << socketDescriptor;
     if(descriptorList.size() == 2){
-        ThreadManager * thread = new ThreadManager(descriptorList.at(0), descriptorList.at(1), this);
+        thread = new ThreadManager(descriptorList.at(0), descriptorList.at(1), this);
 
         this->descriptorList.clear();
         // connect signal/slot. Once a thread is not needed, it will be beleted later

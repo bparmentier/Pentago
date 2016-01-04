@@ -53,6 +53,12 @@ void ThreadManager::run()
     exec();
 }
 
+void ThreadManager::closeConnections()
+{
+    if(firstClientSocket->isOpen())firstClientSocket->close();
+    if(secondClientSocket->isOpen()) secondClientSocket->close();
+}
+
 void ThreadManager::readyReadFirstClient()
 {
     readFromSpecifiedSocket(firstClientSocket);

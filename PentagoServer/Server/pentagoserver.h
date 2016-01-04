@@ -1,6 +1,6 @@
 #ifndef PENTAGOSERVER_H
 #define PENTAGOSERVER_H
-
+#include "threadmanager.h"
 #include <QTcpServer>
 
 class PentagoServer : public QTcpServer
@@ -18,6 +18,8 @@ public slots:
 
 protected:
     void incomingConnection(qintptr socketDescriptor);
+private:
+    ThreadManager * thread;
 };
 
 #endif // PENTAGOSERVER_H
